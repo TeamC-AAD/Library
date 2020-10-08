@@ -47,7 +47,7 @@ jobs:
     - name: Test using Pytest
       run: |
         pip3 install pytest
-        pytest tests.py --doctest-modules --junitxml=$HOME/junit/test-results-#{{ matrix.python-version }}.xml
+        pytest tests.py --doctest-modules --junitxml=$HOME/junit/test-results-${{ matrix.python-version }}.xml
 
     # Upload the xml of the test results
     - name: Upload pytest results
