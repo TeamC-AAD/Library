@@ -38,8 +38,8 @@ jobs:
     # Install the dependencies
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        python3 -m pip install --upgrade pip3
+        if [ -f requirements.txt ]; then pip3 install -r requirements.txt; fi
 
     # Lint the code with flake8
     - name: Lint with flake8
@@ -53,7 +53,7 @@ jobs:
     # Test the code
     - name: Test with pytest
       run: |
-        pip install pytest
+        pip3 install pytest
         pytest tests.py --doctest-modules --junitxml=junit/test-results.xml
     
     # Upload the pytest results
