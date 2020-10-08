@@ -15,8 +15,8 @@ jobs:
 
     steps:
     # Setup Python on the CI machine
-    - name: Set up Python ${{ ver-matrix.python-version }}
     - uses: actions/checkout@v2
+    - name: Set up Python ${{ ver-matrix.python-version }}
       uses: actions/setup-python@v2
       with:
         python-version: $4{{ ver-matrix.python-version }}
