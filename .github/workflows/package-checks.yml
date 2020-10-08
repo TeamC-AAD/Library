@@ -21,14 +21,14 @@ jobs:
 
     steps:
     # Setup Python on the CI machine
-    - name: Set up Python ${{ ver-matrix.python-version }}
     - uses: actions/checkout@v2
+    - name: Set up Python ${{ ver-matrix.python-version }}
       uses: actions/setup-python@v2
       with:
-        python-version: $4{{ ver-matrix.python-version }}
+        python-version: ${{ ver-matrix.python-version }}
 
     # Install the corresponding dependencies using requirements.txt
-    -name: Install Dependencies
+    - name: Install Dependencies
       run: |
         python3 -m pip install --upgrade pip
         if [-f requirements.txt ]; then pip3 install -r requirements.txt; fi
@@ -47,12 +47,12 @@ jobs:
     - name: Test using Pytest
       run: |
         pip3 install pytest
-        pytest tests.py --doctest-modules --junitxml=~/junit/test-results.xml
+        pytest tests.py --doctest-modules --junitxml=$HOME/junit/test-results.xml
 
     # Upload the xml of the test results
     - name: Upload pytest results
       uses: actions/upload-artifact@v2
       with:
         name: pytest-results-${{ ver-matrix.python-version }}
-        path: ~/junit/test-results-${{ ver-matrix.python-version }}.xml
+        path: $HOME/junit/test-results-${{ ver-matrix.python-version }}.xml
       if: ${{ always() }}

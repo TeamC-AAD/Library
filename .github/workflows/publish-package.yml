@@ -15,14 +15,14 @@ jobs:
 
     steps:
     # Setup Python on the CI machine
-    - name: Set up Python ${{ ver-matrix.python-version }}
     - uses: actions/checkout@v2
+    - name: Set up Python ${{ ver-matrix.python-version }}
       uses: actions/setup-python@v2
       with:
-        python-version: $4{{ ver-matrix.python-version }}
+        python-version: ${{ ver-matrix.python-version }}
 
     # Install the corresponding dependencies using requirements.txt
-    -name: Install Dependencies
+    - name: Install Dependencies
       run: |
         python3 -m pip install --upgrade pip
         if [-f requirements.txt ]; then pip3 install -r requirements.txt; fi
