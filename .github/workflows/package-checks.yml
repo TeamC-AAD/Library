@@ -1,0 +1,54 @@
+# This is triggered on Pull request or a push to main
+# which needs to be blocked. This is also triggered on
+# a release of the library for linting and testing.
+
+name: Package Tests
+
+on: pull_request
+
+jobs:
+
+  test-n-lint:
+
+    runs-on: ubuntu-latest
+    stratregy:
+      ver-matrix: 
+        python-version: [3.5, 3.6, 3.7, 3.8]
+
+    steps:
+    # Setup Python on the CI machine
+    - name: Set up Python ${{ ver-matrix.python-version }}
+    - uses: actions/checkout@v2
+      uses: actions/setup-python@v2
+      with:
+        python-version: $4{{ ver-matrix.python-version }}
+
+    # Install the corresponding dependencies using requirements.txt
+    -name: Install Dependencies
+      run: |
+        python3 -m pip install --upgrade pip
+        if [-f requirements.txt ]; then pip3 install -r requirements.txt; fi
+    
+    # Lint the code using flake8
+    - name: Lint code with flake8
+      run: |
+        pip3 install flake8
+
+        # stop the build if there are Python syntax errors or undefined names
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+    # Test the code using pytest module
+    - name: Test using Pytest
+      run: |
+        pip3 install pytest
+        pytest tests.py --doctest-modules --junitxml=~/junit/test-results.xml
+
+    # Upload the xml of the test results
+    - name: Upload pytest results
+      uses: actions/upload-artifact@v2
+      with:
+        name: pytest-results-${{ ver-matrix.python-version }}
+        path: ~/junit/test-results-${{ ver-matrix.python-version }}.xml
+      if: ${{ always() }}
