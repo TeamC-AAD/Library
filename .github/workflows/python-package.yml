@@ -58,7 +58,7 @@ jobs:
     
     # Upload the pytest results
     - name: Upload pytest results
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v2  
       with:
         name: pytest-reqults-${{ matrix.python-version }}
         path: junit/test-results-${{ matrix.python-version }}.xml
@@ -72,4 +72,4 @@ jobs:
       run: |
         python3 setup.py sdist bdist_wheel
         # twine check dist/*
-        twine upload dist/* --verbose -u $TWINE_USERNAME -p TWINE_PASSWORD
+        twine upload -u $TWINE_USERNAME -p $TWINE_PASSWORD dist/* --verbose
