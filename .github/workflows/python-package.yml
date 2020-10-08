@@ -65,7 +65,7 @@ jobs:
       if: ${{ always() }}
     
     # Publish the package to PyPI
-    - name: Build and Publish
+    - name: Build and Publish to PyPI
       env:
         TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
         TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
