@@ -12,10 +12,10 @@ on:
 
 jobs:
 
-  test-n-lint:
+  check-code-style:
 
     runs-on: ubuntu-latest
-    stratregy:
+    strategy:
       matrix: 
         python-version: [3.5, 3.6, 3.7, 3.8]
 
