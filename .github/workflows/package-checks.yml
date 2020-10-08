@@ -12,7 +12,7 @@ on:
 
 jobs:
 
-  test-n-lint:
+  check-code-style:
 
     runs-on: ubuntu-latest
     strategy:
