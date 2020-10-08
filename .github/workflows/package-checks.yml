@@ -6,9 +6,9 @@ name: Package Tests
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
 
@@ -16,16 +16,16 @@ jobs:
 
     runs-on: ubuntu-latest
     stratregy:
-      ver-matrix: 
+      matrix: 
         python-version: [3.5, 3.6, 3.7, 3.8]
 
     steps:
     # Setup Python on the CI machine
     - uses: actions/checkout@v2
-    - name: Set up Python ${{ ver-matrix.python-version }}
+    - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
-        python-version: ${{ ver-matrix.python-version }}
+        python-version: ${{ matrix.python-version }}
 
     # Install the corresponding dependencies using requirements.txt
     - name: Install Dependencies
@@ -53,6 +53,6 @@ jobs:
     - name: Upload pytest results
       uses: actions/upload-artifact@v2
       with:
-        name: pytest-results-${{ ver-matrix.python-version }}
-        path: $HOME/junit/test-results-${{ ver-matrix.python-version }}.xml
+        name: pytest-results-${{ matrix.python-version }}
+        path: $HOME/junit/test-results-${{ matrix.python-version }}.xml
       if: ${{ always() }}
