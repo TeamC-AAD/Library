@@ -5,7 +5,7 @@ with open("README.md", "r") as help_file:
     long_description = help_file.read()
 
 setup(
-    name="GeneLibrary",
+    name="GeneAlgorithmsLibrary",
     version=0.0,
     description="Gene library",
     long_description=long_description,
