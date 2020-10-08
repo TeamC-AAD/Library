@@ -19,7 +19,7 @@ jobs:
     - name: Set up Python ${{ ver-matrix.python-version }}
       uses: actions/setup-python@v2
       with:
-        python-version: $4{{ ver-matrix.python-version }}
+        python-version: ${{ ver-matrix.python-version }}
 
     # Install the corresponding dependencies using requirements.txt
     -name: Install Dependencies
