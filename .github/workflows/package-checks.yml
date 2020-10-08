@@ -47,12 +47,12 @@ jobs:
     - name: Test using Pytest
       run: |
         pip3 install pytest
-        pytest tests.py --doctest-modules --junitxml=$HOME/junit/test-results.xml
+        pytest tests.py --doctest-modules --junitxml=$HOME/junit/test-results-#{{ matrix.python-version }}.xml
 
     # Upload the xml of the test results
     - name: Upload pytest results
       uses: actions/upload-artifact@v2
       with:
         name: pytest-results-${{ matrix.python-version }}
-        path: $HOME/junit/test-results-${{ matrix.python-version }}.xml
+        path: /home/runner/junit/test-results-${{ matrix.python-version }}.xml
       if: ${{ always() }}
