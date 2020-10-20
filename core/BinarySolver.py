@@ -1,7 +1,7 @@
 from typing import Sequence
 import numpy as np
 import matplotlib.pyplot as plt
-from geneal.genetic_algorithms.genetic_algorithm_base import GenAlgSolver
+from core.AbstractSolver import GenAlgSolver
 
 
 class BinaryGenAlgSolver(GenAlgSolver):
