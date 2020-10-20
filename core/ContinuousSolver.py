@@ -139,7 +139,7 @@ class ContinuousGenAlgSolver(GenAlgSolver):
         Mutates the population by randomizing specific positions of the
         """
         
-         mutation_rows, mutation_cols = super(
+        mutation_rows, mutation_cols = super(
             ContinuousGenAlgSolver, self
         ).mutate_population(population, n_mutations)
 
