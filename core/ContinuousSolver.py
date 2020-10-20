@@ -39,6 +39,33 @@ class ContinuousGenAlgSolver(GenAlgSolver):
         If only one tuple is provided, then it is assumed the same for every variable
         :param problem_type: whether problem is of float or integer type
         """
+        
+        GenAlgSolver.__init__(
+            self,
+            fitness_function=fitness_function,
+            n_genes=n_genes,
+            max_gen=max_gen,
+            pop_size=pop_size,
+            mutation_rate=mutation_rate,
+            selection_rate=selection_rate,
+            selection_strategy=selection_strategy,
+            verbose=verbose,
+            show_stats=show_stats,
+            plot_results=plot_results,
+            excluded_genes=excluded_genes,
+            n_crossover_points=n_crossover_points,
+            random_state=random_state,
+        )
+
+        if not variables_limits:
+            min_max = np.iinfo(np.int64)
+            variables_limits = [(min_max.min, min_max.max) for _ in range(n_genes)]
+
+        if get_input_dimensions(variables_limits) == 1:
+            variables_limits = [variables_limits for _ in range(n_genes)]
+
+        self.variables_limits = variables_limits
+        self.problem_type = problem_type
 
 
     def initialize_population(self):
@@ -48,6 +75,19 @@ class ContinuousGenAlgSolver(GenAlgSolver):
         type (either integers or floats).
         :return: a numpy array with a randomized initialized population
         """
+        population = np.empty(shape=(self.pop_size, self.n_genes))
+
+        for i, variable_limits in enumerate(self.variables_limits):
+            if self.problem_type == float:
+                population[:, i] = np.random.uniform(
+                    variable_limits[0], variable_limits[1], size=self.pop_size
+                )
+            else:
+                population[:, i] = np.random.randint(
+                    variable_limits[0], variable_limits[1] + 1, size=self.pop_size
+                )
+
+        return population
 
     
     def get_crossover_points(self):
@@ -55,15 +95,58 @@ class ContinuousGenAlgSolver(GenAlgSolver):
         Retrieves random crossover points
         :return: a numpy array with the crossover points
         """
+        return np.sort(
+            np.random.choice(
+                np.arange(self.n_genes), self.n_crossover_points, replace=False
+            )
+        )
     
     def create_offspring( self, first_parent, sec_parent, crossover_pt, offspring_number):
         """
         Creates an offspring from 2 parents. It performs the crossover
+        
+        :param first_parent: first parent's chromosome
+        :param sec_parent: second parent's chromosome
+        :param crossover_pt: point(s) at which to perform the crossover
+        :param offspring_number: whether it's the first or second offspring from a pair of parents.
+        Important if there's different logic to be applied to each case.
+        :return: the resulting offspring.
         """
+        
+        crossover_pt = crossover_pt[0]
+
+        beta = (
+            np.random.rand(1)[0]
+            if offspring_number == "first"
+            else -np.random.rand(1)[0]
+        )
+
+        if self.problem_type == float:
+            p_new = first_parent[crossover_pt] - beta * (
+                first_parent[crossover_pt] - sec_parent[crossover_pt]
+            )
+        else:
+            p_new = first_parent[crossover_pt] - np.round(
+                beta * (first_parent[crossover_pt] - sec_parent[crossover_pt])
+            )
+
+        return np.hstack(
+            (first_parent[:crossover_pt], p_new, sec_parent[crossover_pt + 1 :])
+        )
     
     def mutate_population(self, population, n_mutations):
         """
         Mutates the population by randomizing specific positions of the
         """
+        
+         mutation_rows, mutation_cols = super(
+            ContinuousGenAlgSolver, self
+        ).mutate_population(population, n_mutations)
+
+        population[mutation_rows, mutation_cols] = self.initialize_population()[
+            mutation_rows, mutation_cols
+        ]
+
+        return population
 
     
