@@ -58,8 +58,6 @@ def classic_linear_rank(population_fitness):
 
     http://www.ijmlc.org/papers/146-C00572-005.pdf
     """
-
-    # TODO: this doesn't even select lol
     
     # Get the number of individuals in the population.
     n = len(population_fitness)
@@ -67,20 +65,12 @@ def classic_linear_rank(population_fitness):
     # (sum of integers 1 to N).
     rank_sum = n * (n + 1) / 2
 
-    fitness_intermediary = list()
+    # Create ranks
+    array = np.array(population_fitness)
+    order = array.argsort()
+    ranks = order.argsort()
 
-    # Sort and go through all individual fitnesses; enumerate ranks from 1.
-    for rank, ind_fitness in enumerate(sorted(population_fitness), 1):
-        fitness_intermediary.append(float(rank) / rank_sum)
-    
-    # print(fitness_intermediary)
-    # qq = input()
-    
-    return proportional_roulette_wheel(fitness_intermediary)
-
-def linear_rank_with_selective_pressure():
-    # TODO: Fill function
-    pass
+    return proportional_roulette_wheel(ranks)
 
 def tournament_selection():
     # TODO: Fill function
@@ -96,6 +86,7 @@ def selection_test(f_func):
     p_fitness = [2, 4, 6, 1, 7, 10, 1, 20]
     cnt = dict()
     total_iters = 100000
+    print(p_fitness)
     for i in range(total_iters):
         ind = f_func(p_fitness)
         if ind in cnt:
@@ -109,7 +100,7 @@ def selection_test(f_func):
 
 def sus_test():
     p_fitness = [2, 4, 6, 1, 7, 10, 1, 13]
-
+    print(p_fitness)
     # selection_test(proportional_roulette_wheel)
     # total_iters = len(p_fitness)
     total_iters = 10000
