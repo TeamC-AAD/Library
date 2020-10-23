@@ -71,11 +71,3 @@ def classic_linear_rank(population_fitness):
     ranks = order.argsort()
 
     return proportional_roulette_wheel(ranks)
-
-def tournament_selection():
-    # TODO: Fill function
-    pass
-
-def transform_ranking_selection():
-    # TODO: Fill function
-    pass
