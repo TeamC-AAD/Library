@@ -8,7 +8,7 @@ import random
 # Nitasha Soni et al, / (IJCSIT) International Journal of Computer Science
 # and Information Technologies, Vol. 5 (3) , 2014, 4519-4521 which can be
 # found at http://ijcsit.com/docs/Volume%205/vol5issue03/ijcsit20140503404.pdf
-# Have also been taken from https://arxiv.org/pdf/1203.3099.pdf
+# Could also cite https://arxiv.org/pdf/1203.3099.pdf
 
 def insert_mutation(genome):
     """Performs an insert mutation operation on the provided genome. First,
