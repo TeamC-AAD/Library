@@ -2,6 +2,8 @@ import numpy as np
 import random
 from misc import *
 """Defines all the available selection methods"""
+import sys
+import numpy as np
 
 def proportional_roulette_wheel(population):
     """ Performs roulette wheel selection:
@@ -22,7 +24,6 @@ def proportional_roulette_wheel(population):
     # probabilities computed for each individual in the population
     parent_ind = np.random.choice(len(population), p=selection_probabilities)
     return parent_ind
-
 
 def stochastic_universal_sampling(population, N):
     """SUS uses a single random value to sample all of the solutions by 
@@ -71,3 +72,23 @@ def classic_linear_rank(population_fitness):
     ranks = order.argsort()
 
     return proportional_roulette_wheel(ranks)
+
+def tournament_selection(pop,fitness,k):
+    '''
+    Input: population,fitness and a number k.
+    Output: the function conducts tournaments between k individuals randomly and selects the best
+    ''' 
+    N = np.size(pop)
+    best = -1
+    fit  = -sys.maxsize-1
+    for _ in range(1,k):
+        ind = pop[np.random.randint(0, N)]
+        if (fit == -1) or fitness[ind] > fitness[best]:
+            best = ind
+            fit = fitness[ind]
+    return best
+
+def boltzmann_selection(temp_gene , fitness , pop):
+    #TODO: Fill function
+    pass
+
