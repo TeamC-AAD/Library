@@ -79,34 +79,3 @@ def tournament_selection():
 def transform_ranking_selection():
     # TODO: Fill function
     pass
-
-
-# Very simple tests to view workings
-def selection_test(f_func):
-    p_fitness = [2, 4, 6, 1, 7, 10, 1, 20]
-    cnt = dict()
-    total_iters = 100000
-    print(p_fitness)
-    for i in range(total_iters):
-        ind = f_func(p_fitness)
-        if ind in cnt:
-            cnt[ind] += 1
-        else:
-            cnt[ind] = 1
-
-    print("key  fitness  percent_selected")
-    for key, value in cnt.items():
-        print(key, ' ', p_fitness[key], ' ', value/total_iters)
-
-def sus_test():
-    p_fitness = [2, 4, 6, 1, 7, 10, 1, 13]
-    print(p_fitness)
-    # selection_test(proportional_roulette_wheel)
-    # total_iters = len(p_fitness)
-    total_iters = 10000
-    res = stochastic_universal_sampling(p_fitness, total_iters)
-    for i in set(res):
-        print(i, ' ', p_fitness[i], ' ', res.count(i)/total_iters)
-
-# sus_test()
-# selection_test(classic_linear_rank)

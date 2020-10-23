@@ -1,3 +1,4 @@
+""" Miscallaneous helper functions"""
 
 def binSearch(wheel, num):
     mid = len(wheel)//2
