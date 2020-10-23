@@ -1,6 +1,14 @@
 """ Miscallaneous helper functions"""
 
 def binSearch(wheel, num):
+    """Standard binary search
+    Args:
+        wheel(list): An ordered list of floats/ints
+        num(int/float): Element to be searched
+    
+    Returns:
+        int: value
+    """
     mid = len(wheel)//2
     low, high, answer = wheel[mid]
     if low<=num<=high:
@@ -12,6 +20,15 @@ def binSearch(wheel, num):
 
 
 def makeWheel(population):
+    """Helper for the RWS in creating a proportional
+    distribution among elements in a given array
+
+    Args:
+        population(list): List of int/float
+    
+    Returns:
+        list: The generated wheel
+    """
     wheel = []
     total = sum([p for p in population])
     top = 0
