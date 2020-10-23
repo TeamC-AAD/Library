@@ -10,6 +10,12 @@ def proportional_roulette_wheel(population):
     every individual can become a parent with a 
     probability which is proportional to its fitness.
     Selects one parent.
+
+    Args:
+        population(list): List containing fitness values of individuals
+    
+    Returns:
+        int: Index of parent chosen
     """
 
     # Compute the total fitness of population
@@ -31,6 +37,13 @@ def stochastic_universal_sampling(population, N):
     weaker members of the population (according to their fitness) 
     chance to be chosen.
     Produces a parent pool of size N
+
+    Args:
+        population (List): List containing fitness values of individuals
+        N (int): Number of parents
+    
+    Returns:
+        list: The indices of parents
     """
 
     # https://stackoverflow.com/questions/22749132/stochastic-universal-sampling-ga-in-python
@@ -58,6 +71,12 @@ def classic_linear_rank(population_fitness):
     of diversity.
 
     http://www.ijmlc.org/papers/146-C00572-005.pdf
+
+    Args:
+        population_fitness(list): List containing fitness values of individuals
+    
+    Returns:
+        int: Index of parent chosen
     """
     
     # Get the number of individuals in the population.
