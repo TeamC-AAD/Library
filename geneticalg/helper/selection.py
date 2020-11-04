@@ -137,6 +137,7 @@ def selection_test(func):
         print(key, ' ', p_fitness[key], ' ', value/total_iters)
 
 
+'''
 print("Testing proportional roulette wheel")
 selection_test(proportional_roulette_wheel)
 
@@ -148,3 +149,4 @@ selection_test(classic_linear_rank)
 
 print("Testing tournament selection")
 selection_test(tournament_selection)
+'''
