@@ -21,6 +21,7 @@ from geneticalg.helper import crossover
 class AbstractSolver:
     def __init__(
         self,
+        problem_type: float,
         gene_size: int = 100,
         fitness_func=None,
         pop_cnt: int = 100,
@@ -28,15 +29,15 @@ class AbstractSolver:
         mutation_ratio: float = 0.2,
         selection_ratio: float = 0.2,
         selection_type: str = "",
-        mutation_type: str = "",
-        crossover_type: str = "",
+        mutation_type: str = "insert",
+        crossover_type: str = "one_point",
         excluded_genes: Sequence = None,
         verbose: bool = False,
         **kwargs
     ):
         seed = np.random.randint(0, 10)
         np.random.seed(seed)
-
+        
         self.max_gen = max_gen
         self.fitness_func = fitness_func
         self.pop_cnt = pop_cnt
@@ -47,7 +48,7 @@ class AbstractSolver:
         self.crossover_type = crossover_type
         self.mutation_type = mutation_type
         self.verbose = verbose
-
+        self.problem_type = float
         self.n_mutations = self.get_number_mutations()
 
         '''
@@ -121,40 +122,47 @@ class AbstractSolver:
         fitness, population = self.sort_by_fitness(fitness, population)
 
         gen_interval = max(round(self.max_gen / 15), 1)
-
+        # gen_interval = 1
         while True:
             generation += 1
 
             if generation % gen_interval == 0 and self.verbose:
-                logging.info(f"Iter number: {generation}")
-                logging.info(f"Best fitness: {fitness[0]}")
+                # logging.info(f"Iter number: {generation}")
+                # logging.info(f"Best fitness: {fitness[0]}")
 
-            curr_avg_fitness = statistics.mean(average_fitness)
+                print(f"Iter number: {generation}")
+                print(f"Best fitness: {fitness[0]}")
+                print(f"best ind: {population[0]} has value {sum(population[0])}")
 
-            # Track average and max, fitness is sorted
-            average_fitness.append(curr_avg_fitness)
-            max_fitness.append(fitness[0])
+            # curr_avg_fitness = np.mean(np.array(average_fitness))
+
+            # # Track average and max, fitness is sorted
+            # average_fitness.append(curr_avg_fitness)
+            # max_fitness.append(fitness[0])
+
+            average_fitness = np.append(average_fitness, fitness.mean())
+            max_fitness = np.append(max_fitness, fitness[0])
 
             ma, pa = self.select_parents(fitness)
 
             ix = np.arange(0, self.pop_cnt - self.min_pop - 1, 2)
 
-            xp = np.array(
-                list(map(lambda _: self.get_crossover_points(), range(self.n_matings)))
-            )
+            # xp = np.array(
+            #     list(map(lambda _: self.get_crossover_points(), range(self.n_matings)))
+            # )
 
             # Generate the next population
-            for i in range(xp.shape[0]):
+            for i in range(self.n_matings):
                 ma_ind = population[ma[i], :]
                 pa_ind = population[pa[i], :]
                 f_child, s_child = self.create_offspring(
-                    ma_ind, pa_ind, xp[i]
+                    ma_ind, pa_ind
                 )
                 population[-1 - ix[i], :] = f_child
                 population[-1 - ix[i] - 1, :] = s_child
 
             # Mutate population
-            population = self.mutate_population(population, self.n_mutation)
+            population = self.mutate_population(population, self.n_mutations)
             # Compute fitness for current population
             fitness = np.hstack((fitness[0], self.calculate_fitness(population[1:, :])))
             # Order fitness and population
@@ -162,6 +170,16 @@ class AbstractSolver:
             
             if generation >= self.max_gen:
                 break
+
+        self.generations_ = generation
+        self.best_individual_ = population[0, :]
+        self.best_fitness_ = fitness[0]
+        self.population_ = population
+        self.fitness_ = fitness
+
+        print(f"Best individual: {self.best_individual_}")
+        print(f"Best fitness: {self.best_fitness_}")
+    
 
     @staticmethod
     def sort_by_fitness(fitness, population):
@@ -193,39 +211,35 @@ class AbstractSolver:
             Two parents ma and pa
         """
 
-        ma,pa = None
+        ma = pa = None
 
-        ma = selection.selection_strats[self.selection_type](fitness, n_matings)
-        pa = selection.selection_strats[self.selection_type](fitness, n_matings)
+        ma = selection.selection_strats[self.selection_type](fitness, self.n_matings)
+        pa = selection.selection_strats[self.selection_type](fitness, self.n_matings)
 
         return ma,pa
-    
-    def get_number_mutations(self):
-        return math.ceil((self.pop_size - 1) * self.n_genes * self.mutation_rate)
 
-    @staticmethod
-    @abstractmethod
-    def create_offspring(self,first_parent, sec_parent):
+    def get_number_mutations(self):
+        return math.ceil(self.gene_size * self.mutation_ratio)
+
+    def create_offspring(self, first_parent, sec_parent):
         """docstring
         """
-        if child_no != 1 or child_no != 2:
-            '''
-            Error
-            '''
-            pass
-        beta = np.random.rand(1)[0]
-        child1 , child2 = None
-        child1, child2 = crossover.crossover_strats[self.crossover_type](first_parent, sec_parent , beta)
+        child1 = child2 = None
+        child1, child2 = crossover.crossover_strats[self.crossover_type](first_parent, sec_parent)
 
         return child1,child2
 
     def mutate_population(self, population, n_mutation):
         """docstring
         """
-        chosen_indivs = random.sample(population, n_mutation)
+        chosen_indices = random.sample(range(len(population)), n_mutation)
 
-        for indiv in chosen_indivs:
-            pass
+        for index in chosen_indices:
+           population[index] = mutation.mutation_strats[self.mutation_type](population[index], **self.kwargs)
+        
+        return population
+        
+
 
     @abstractmethod
     def initialize_population(self):

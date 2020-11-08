@@ -13,14 +13,6 @@ import random
 # Defines the dictionary of possible mutations and the corresponding function
 # pointers, and this can easily be used in the core library to use the string 
 # to run the function.
-mutation_strats = {
-    "insert"        :   insert_mutation,
-    "flip"          :   flip_mutation,
-    "interchanging" :   interchangin_mutatison,
-    "reversing"     :   reversing_mutation,
-    "uniform"       :   uniform_mutation,
-    "creep"         :   creep_mutation
-}
 
 def insert_mutation(genome):
     """Performs an insert mutation operation on the provided genome. First,
@@ -36,12 +28,12 @@ def insert_mutation(genome):
         The mutated genome
     """
 
-    alleleA = random.randint(0, len(genome))
-    alleleB = random.randint(0, len(genome))
+    alleleA = random.randint(0, len(genome) - 1)
+    alleleB = random.randint(0, len(genome) - 1)
     
     # Alleles should not be the same
     while alleleA != alleleB:
-        alleleB = random.randint(0, len(genome))
+        alleleB = random.randint(0, len(genome) - 1)
 
     # alleleA needs be always less than alleleB. Swap if needed
     if alleleA > alleleB:
@@ -296,3 +288,13 @@ def creep_mutation(
         pass
 
     return genome
+
+
+mutation_strats = {
+    "insert"        :   insert_mutation,
+    "flip"          :   flip_mutation,
+    "interchanging" :   interchanging_mutation,
+    "reversing"     :   reversing_mutation,
+    "uniform"       :   uniform_mutation,
+    "creep"         :   creep_mutation
+}

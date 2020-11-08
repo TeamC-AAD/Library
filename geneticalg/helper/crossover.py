@@ -1,12 +1,6 @@
 '''Crossover Algorithms'''
 import numpy as np
 
-crossover_strats = {
-    "one_point"     :   one_point_crossover,
-    "two_point"     :   two_point_crossover,
-    "uniform"       :   uniform_crossover
-}
-
 def one_point_crossover(p1 , p2):
     '''
     Given two chromosomes, returns the child chromosomes
@@ -87,6 +81,7 @@ def test_crossover(func):
     print(p1)
     print(p2)
 
+'''
 print("Testing one point crossover")
 test_crossover(one_point_crossover)
 
@@ -95,7 +90,10 @@ test_crossover(two_point_crossover)
 
 print("Testing uniform crossover")
 test_crossover(uniform_crossover)
+'''
 
-    
-
-            
+crossover_strats = {
+    "one_point"     :   one_point_crossover,
+    "two_point"     :   two_point_crossover,
+    "uniform"       :   uniform_crossover
+}

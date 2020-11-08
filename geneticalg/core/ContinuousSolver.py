@@ -2,28 +2,33 @@ from typing import Sequence
 
 import numpy as np
 
-from geneal.genetic_algorithms.genetic_algorithm_base import GenAlgSolver
-from geneal.utils.helpers import get_input_dimensions
+from geneticalg.core.AbstractSolver import AbstractSolver
 
 
-class ContinuousGenAlgSolver(GenAlgSolver):
+def get_input_dimensions(lst, n_dim=0):
+    if isinstance(lst, (list, tuple)):
+        return get_input_dimensions(lst[0], n_dim + 1) if len(lst) > 0 else 0
+    else:
+        return n_dim
+
+
+class ContinuousGenAlgSolver(AbstractSolver):
     def __init__(
         self,
-        n_genes: int,
-        fitness_function=None,
+        problem_type=float,
+        fitness_func=None,
+        pop_cnt: int = 100,
+        gene_size: int = 100,
         max_gen: int = 1000,
-        pop_size: int = 100,
-        mutation_rate: float = 0.15,
-        selection_rate: float = 0.5,
-        selection_strategy: str = "roulette_wheel",
-        verbose: bool = True,
-        show_stats: bool = True,
-        plot_results: bool = True,
+        mutation_ratio: float = 0.2,
+        selection_ratio: float = 0.2,
+        selection_type: str = "",
+        mutation_type: str = "",
+        crossover_type: str = "",
         excluded_genes: Sequence = None,
         variables_limits=(-10, 10),
-        problem_type=float,
-        n_crossover_points: int = 1,
-        random_state: int = None,
+        verbose: bool = False,
+        **kwargs
     ):
         """
         :param fitness_function: can either be a fitness function or
@@ -43,29 +48,29 @@ class ContinuousGenAlgSolver(GenAlgSolver):
         :param problem_type: whether problem is of float or integer type
         """
 
-        GenAlgSolver.__init__(
+        AbstractSolver.__init__(
             self,
-            fitness_function=fitness_function,
-            n_genes=n_genes,
+            problem_type=problem_type,
+            gene_size=gene_size,
+            fitness_func=fitness_func,
+            pop_cnt=pop_cnt,
             max_gen=max_gen,
-            pop_size=pop_size,
-            mutation_rate=mutation_rate,
-            selection_rate=selection_rate,
-            selection_strategy=selection_strategy,
-            verbose=verbose,
-            show_stats=show_stats,
-            plot_results=plot_results,
+            mutation_ratio=mutation_ratio,
+            selection_ratio=selection_ratio,
+            selection_type=selection_type,
+            mutation_type=mutation_type,
+            crossover_type=crossover_type,
             excluded_genes=excluded_genes,
-            n_crossover_points=n_crossover_points,
-            random_state=random_state,
+            verbose=verbose,
+            **kwargs
         )
 
         if not variables_limits:
             min_max = np.iinfo(np.int64)
-            variables_limits = [(min_max.min, min_max.max) for _ in range(n_genes)]
+            variables_limits = [(min_max.min, min_max.max) for _ in range(gene_size)]
 
         if get_input_dimensions(variables_limits) == 1:
-            variables_limits = [variables_limits for _ in range(n_genes)]
+            variables_limits = [variables_limits for _ in range(gene_size)]
 
         self.variables_limits = variables_limits
         self.problem_type = problem_type
@@ -75,58 +80,20 @@ class ContinuousGenAlgSolver(GenAlgSolver):
         Initializes the population of the problem according to the
         population size and number of genes and according to the problem
         type (either integers or floats).
+
         :return: a numpy array with a randomized initialized population
         """
 
-        population = np.empty(shape=(self.pop_size, self.n_genes))
+        population = np.empty(shape=(self.pop_cnt, self.gene_size))
 
         for i, variable_limits in enumerate(self.variables_limits):
             if self.problem_type == float:
                 population[:, i] = np.random.uniform(
-                    variable_limits[0], variable_limits[1], size=self.pop_size
+                    variable_limits[0], variable_limits[1], size=self.pop_cnt
                 )
             else:
                 population[:, i] = np.random.randint(
-                    variable_limits[0], variable_limits[1] + 1, size=self.pop_size
+                    variable_limits[0], variable_limits[1] + 1, size=self.pop_cnt
                 )
 
         return population
-
-    def get_crossover_points(self):
-        """
-        Retrieves random crossover points
-        :return: a numpy array with the crossover points
-        """
-
-        pass
-
-    def create_offspring(
-        self, first_parent, sec_parent, crossover_pt, offspring_number
-    ):
-        """
-        Creates an offspring from 2 parents. It performs the crossover
-        according the following rule:
-        p_new = first_parent[crossover_pt] + beta * (first_parent[crossover_pt] - sec_parent[crossover_pt])
-        offspring = [first_parent[:crossover_pt], p_new, sec_parent[crossover_pt + 1:]
-        where beta is a random number between 0 and 1, and can be either positive or negative
-        depending on if it's the first or second offspring
-        http://index-of.es/z0ro-Repository-3/Genetic-Algorithm/R.L.Haupt,%20S.E.Haupt%20-%20Practical%20Genetic%20Algorithms.pdf
-        :param first_parent: first parent's chromosome
-        :param sec_parent: second parent's chromosome
-        :param crossover_pt: point(s) at which to perform the crossover
-        :param offspring_number: whether it's the first or second offspring from a pair of parents.
-        Important if there's different logic to be applied to each case.
-        :return: the resulting offspring.
-        """
-
-        pass
-
-    def mutate_population(self, population, n_mutations):
-        """
-        Mutates the population by randomizing specific positions of the
-        population individuals.
-        :param population: the population at a given iteration
-        :param n_mutations: number of mutations to be performed.
-        :return: the mutated population
-        """
-        pass

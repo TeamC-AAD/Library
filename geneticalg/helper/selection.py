@@ -1,15 +1,9 @@
 """Defines all the available selection methods"""
 import numpy as np
 import random
-from misc import binSearch, makeWheel
+from .misc import binSearch, makeWheel
 import sys
-
-selection_strats = {
-    "roulette_wheel"        :   proportional_roulette_wheel,
-    "stochastic"            :   stochastic_universal_sampling,
-    "linear_rank"           :   classic_linear_rank,
-    "tournament"            :   tournament_selection
-}
+import math
 
 
 def proportional_roulette_wheel(population, N):
@@ -26,6 +20,9 @@ def proportional_roulette_wheel(population, N):
     Returns:
         int: Index of parent chosen
     """
+
+    update = min(population)
+    population = [fitness + math.fabs(update) for fitness in population]
 
     # Compute the total fitness of population
     sum_fitness = sum([entity_fitness for entity_fitness in population])
@@ -160,3 +157,10 @@ selection_test(classic_linear_rank)
 print("Testing tournament selection")
 selection_test(tournament_selection)
 '''
+
+selection_strats = {
+    "roulette_wheel"        :   proportional_roulette_wheel,
+    "stochastic"            :   stochastic_universal_sampling,
+    "linear_rank"           :   classic_linear_rank,
+    "tournament"            :   tournament_selection
+}
