@@ -10,6 +10,18 @@ import random
 # found at http://ijcsit.com/docs/Volume%205/vol5issue03/ijcsit20140503404.pdf
 # Could also cite https://arxiv.org/pdf/1203.3099.pdf
 
+# Defines the dictionary of possible mutations and the corresponding function
+# pointers, and this can easily be used in the core library to use the string 
+# to run the function.
+mutation_strats = {
+    "insert"        :   insert_mutation,
+    "flip"          :   flip_mutation,
+    "interchanging" :   interchangin_mutatison,
+    "reversing"     :   reversing_mutation,
+    "uniform"       :   uniform_mutation,
+    "creep"         :   creep_mutation
+}
+
 def insert_mutation(genome):
     """Performs an insert mutation operation on the provided genome. First,
     picks two alleles at random and moves the second allele to be right after
@@ -148,8 +160,8 @@ def uniform_mutation(genome, lower_bound, upper_bound):
 
 def creep_mutation(
     genome, distribution, 
-    alpha=None, beta=None, 
-    lambd=None, mu=None, 
+    alpha=None, beta=None,
+    lambd=None, mu=None,
     sigma=None, kappa=None
 ):
     """This mutation operator performs a creep mutation on the genome.

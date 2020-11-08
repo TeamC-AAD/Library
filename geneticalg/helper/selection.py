@@ -4,6 +4,13 @@ import random
 from misc import binSearch, makeWheel
 import sys
 
+selection_strats = {
+    "roulette_wheel"        :   proportional_roulette_wheel,
+    "stochastic"            :   stochastic_universal_sampling,
+    "linear_rank"           :   classic_linear_rank,
+    "tournament"            :   tournament_selection
+}
+
 
 def proportional_roulette_wheel(population, N):
     """ Performs roulette wheel selection:
@@ -136,6 +143,9 @@ def selection_test(func):
     for key, value in sorted(cnt.items(), key=lambda x: x[1]/total_iters):
         print(key, ' ', p_fitness[key], ' ', value/total_iters)
 
+'''
+Tests
+'''
 
 '''
 print("Testing proportional roulette wheel")

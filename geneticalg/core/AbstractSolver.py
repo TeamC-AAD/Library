@@ -2,6 +2,7 @@
 import datetime
 import logging
 import math
+import random
 from abc import ABCMeta, abstractmethod
 from typing import Sequence
 
@@ -14,6 +15,8 @@ from geneticalg.helper import mutation
 from geneticalg.helper import selection
 from geneticalg.helper import crossover
 
+
+# TODO: Check if ma == pa
 
 class AbstractSolver:
     def __init__(
@@ -28,6 +31,8 @@ class AbstractSolver:
         mutation_type: str = "",
         crossover_type: str = "",
         excluded_genes: Sequence = None,
+        verbose: bool = False,
+        **kwargs
     ):
         seed = np.random.randint(0, 10)
         np.random.seed(seed)
@@ -41,6 +46,9 @@ class AbstractSolver:
         self.gene_size = gene_size
         self.crossover_type = crossover_type
         self.mutation_type = mutation_type
+        self.verbose = verbose
+
+        self.n_mutations = self.get_number_mutations()
 
         '''
         Base Tests
@@ -59,30 +67,6 @@ class AbstractSolver:
             Generate Error
             '''
             pass
-        
-
-        self.allowed_selection_strat = ["rowlette_wheel", "tournament",
-                                   "linear_transform", "stochastic"]
-                                   
-        self.allowed_crossover_strat = ["one_point" , "two_point" , "uniform"]
-
-        if self.selection_type not in self.allowed_selection_strat:
-            '''
-            Generate Error
-            '''
-            pass
-        if self.crossover_type not in self.allowed_crossover_strat:
-            '''
-            Generate Error
-            '''
-        if self.crossover_type = "one_point":
-            self.crossover_points = 1
-
-        elif self.crossover_type = "two_point":
-            self.crossover_points = 2
-
-        elif self.crossover_type = "uniform":
-            self.crossover_points = 0 
             
         if excluded_genes is not None:
             self.excluded_genes = np.array(self.excluded_genes)
@@ -99,6 +83,8 @@ class AbstractSolver:
             Raise error
             '''
             pass
+        
+        self.kwargs = kwargs
 
     def calculate_fitness(self, population):
         '''Calculates fitness of the population
@@ -134,10 +120,14 @@ class AbstractSolver:
         # Order individuals by their fitness (desc)
         fitness, population = self.sort_by_fitness(fitness, population)
 
-        gen_interval = max(round(self.max_gen / 10), 1)
+        gen_interval = max(round(self.max_gen / 15), 1)
 
         while True:
             generation += 1
+
+            if generation % gen_interval == 0 and self.verbose:
+                logging.info(f"Iter number: {generation}")
+                logging.info(f"Best fitness: {fitness[0]}")
 
             curr_avg_fitness = statistics.mean(average_fitness)
 
@@ -172,7 +162,6 @@ class AbstractSolver:
             
             if generation >= self.max_gen:
                 break
-            
 
     @staticmethod
     def sort_by_fitness(fitness, population):
@@ -202,42 +191,17 @@ class AbstractSolver:
             self: Object instance
         Returns:
             Two parents ma and pa
-        Allowed Strategies:
-            allowed_selection_strat = 
-        ["rowlette_wheel", "tournament","linear_transform", "stochastic"]
         """
 
         ma,pa = None
 
-        if self.selection_type == "tournament":
-            '''
-            Call tournament
-            '''
-            ma = selection.tournament_selection(fitness , n_matings)
-            pa = selection.tournament_selection(fitness , n_matings)
-
-        if self.selection_type == "rowlette_wheel":
-            '''
-            Call Rowlette Wheel
-            '''
-            ma = selection.propotional_roulette_wheel(fitness , n_matings)
-            pa = selection.proportional_roulette_wheel(fitness , n_matings)
-
-        if self.selection_type == "linear_transform":
-            '''
-            Call Linear transform
-            '''
-            ma = selection.classic_linear_rank(fitness , n_matings)
-            pa = selection.classic_linear_rank(fitness , n_matings)
-        
-        if self.selection_type == "stochastic":
-            '''
-            Call Stochastic
-            '''
-            ma = selection.stochastic_universal_sampling(fitness , n_matings)
-            pa = selection.stochastic_universal_sampling(fitness , n_matings)
+        ma = selection.selection_strats[self.selection_type](fitness, n_matings)
+        pa = selection.selection_strats[self.selection_type](fitness, n_matings)
 
         return ma,pa
+    
+    def get_number_mutations(self):
+        return math.ceil((self.pop_size - 1) * self.n_genes * self.mutation_rate)
 
     @staticmethod
     @abstractmethod
@@ -249,22 +213,19 @@ class AbstractSolver:
             Error
             '''
             pass
+        beta = np.random.rand(1)[0]
         child1 , child2 = None
-        if self.crossover_points == 0:
-            child1 , child2 = crossover.uniform_crossover(first_parent , sec_parent)
-
-        if self.crossover_points == 1:
-              child1 , child2 = crossover.one_point_crossover(first_parent , sec_parent)
-
-        if self.crossover_points == 2:
-               child1 , child2 = crossover.two_point_crossover(first_parent , sec_parent)
+        child1, child2 = crossover.crossover_strats[self.crossover_type](first_parent, sec_parent , beta)
 
         return child1,child2
 
-    def mutate_population(self , population , n_mutation):     
-        """docstuff
+    def mutate_population(self, population, n_mutation):
+        """docstring
         """
-        
+        chosen_indivs = random.sample(population, n_mutation)
+
+        for indiv in chosen_indivs:
+            pass
 
     @abstractmethod
     def initialize_population(self):
