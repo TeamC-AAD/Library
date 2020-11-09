@@ -24,12 +24,12 @@ def insert_mutation(genome):
         The mutated genome
     """
 
-    alleleA = random.randint(0, len(genome))
-    alleleB = random.randint(0, len(genome))
+    alleleA = random.randint(0, len(genome) - 1)
+    alleleB = random.randint(0, len(genome) - 1)
     
     # Alleles should not be the same
-    while alleleA != alleleB:
-        alleleB = random.randint(0, len(genome))
+    while alleleA == alleleB:
+        alleleB = random.randint(0, len(genome) - 1)
 
     # alleleA needs be always less than alleleB. Swap if needed
     if alleleA > alleleB:
@@ -66,13 +66,14 @@ def flip_mutation(genome, total_flips):
     if not all(isinstance(allele, bool) for allele in genome):
         # TODO: Error handling
         pass
-    
-    for _ in range(total_flips):
-        point = random.randint(0, len(genome))
 
-        genome[point] = not genome[point]
-    
-    return genome
+    mutated = genome
+
+    for _ in range(total_flips):
+        point = random.randint(0, len(mutated) - 1)
+        mutated[point] = not mutated[point]
+
+    return mutated
 
 # ! should this function be restricted to binary values?
 def interchanging_mutation(genome):
