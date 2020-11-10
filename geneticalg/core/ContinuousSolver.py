@@ -7,9 +7,19 @@ from geneticalg.core.AbstractSolver import AbstractSolver
 
 def get_input_dimensions(lst, n_dim=0):
     if isinstance(lst, (list, tuple)):
-        return get_input_dimensions(lst[0], n_dim + 1) if len(lst) > 0 else 0
+        if len(lst) > 0:
+            return get_input_dimensions(lst[0], n_dim + 1)
+        else:
+            return 0
     else:
         return n_dim
+
+def set_limits(g):
+    # Retrieve machine min/max values
+    min_max = np.iinfo(np.int64)
+    # Generate the ranges
+    limits = [(min_max.min, min_max.max) for _ in range(g)]
+    return limits
 
 
 class ContinuousGenAlgSolver(AbstractSolver):
@@ -66,8 +76,7 @@ class ContinuousGenAlgSolver(AbstractSolver):
         )
 
         if not variables_limits:
-            min_max = np.iinfo(np.int64)
-            variables_limits = [(min_max.min, min_max.max) for _ in range(gene_size)]
+            variables_limits = set_limits(gene_size)
 
         if get_input_dimensions(variables_limits) == 1:
             variables_limits = [variables_limits for _ in range(gene_size)]
@@ -76,22 +85,21 @@ class ContinuousGenAlgSolver(AbstractSolver):
         self.problem_type = problem_type
 
     def initialize_population(self):
-        """
-        Initializes the population of the problem according to the
-        population size and number of genes and according to the problem
-        type (either integers or floats).
+        """Creates the population pool by generating random values
+        based on the problem type (float or integer)
 
-        :return: a numpy array with a randomized initialized population
+        Returns: a numpy array with a randomized initialized population
         """
 
         population = np.empty(shape=(self.pop_cnt, self.gene_size))
 
-        for i, variable_limits in enumerate(self.variables_limits):
-            if self.problem_type == float:
+        if self.problem_type == float:
+            for i, variable_limits in enumerate(self.variables_limits):
                 population[:, i] = np.random.uniform(
                     variable_limits[0], variable_limits[1], size=self.pop_cnt
                 )
-            else:
+        else:
+            for i, variable_limits in enumerate(self.variables_limits):
                 population[:, i] = np.random.randint(
                     variable_limits[0], variable_limits[1] + 1, size=self.pop_cnt
                 )

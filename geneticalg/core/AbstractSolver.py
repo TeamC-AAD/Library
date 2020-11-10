@@ -132,7 +132,7 @@ class AbstractSolver:
 
                 print(f"Iter number: {generation}")
                 print(f"Best fitness: {fitness[0]}")
-                print(f"best ind: {population[0]} has value {sum(population[0])}")
+                print(f"best individual: {population[0]}")
 
             # curr_avg_fitness = np.mean(np.array(average_fitness))
 
