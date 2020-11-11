@@ -1,15 +1,12 @@
 ''' Base solver class '''
-import datetime
+# import datetime
 import logging
 import math
 import random
-from abc import ABCMeta, abstractmethod
+from abc import abstractmethod
 from typing import Sequence
 
-import statistics
-
 import numpy as np
-import matplotlib.pyplot as plt
 
 from geneticalg.helper import mutation
 from geneticalg.helper import selection
@@ -37,7 +34,7 @@ class AbstractSolver:
     ):
         seed = np.random.randint(0, 10)
         np.random.seed(seed)
-        
+
         self.max_gen = max_gen
         self.fitness_func = fitness_func
         self.pop_cnt = pop_cnt
@@ -60,7 +57,8 @@ class AbstractSolver:
             '''
         self.min_pop = math.floor(self.selection_ratio*self.pop_cnt)
         self.n_matings = math.floor((self.pop_cnt - self.min_pop)/2)
-        self.mut_number = math.ceil((self.pop_cnt-1)*self.gene_size*self.mutation_ratio)
+        self.mut_number = math.ceil((self.pop_cnt-1) * self.gene_size *
+                                    self.mutation_ratio)
         self.excluded_genes = excluded_genes
 
         if self.min_pop < 2 or self.n_matings < 1 or self.mut_number < 0:
@@ -68,10 +66,10 @@ class AbstractSolver:
             Generate Error
             '''
             pass
-            
+
         if excluded_genes is not None:
             self.excluded_genes = np.array(self.excluded_genes)
-            self.all_genes = np.arange(0,self.gene_size)
+            self.all_genes = np.arange(0, self.gene_size)
             self.allowed_genes = []
             for i in self.all_genes:
                 if i in self.excluded_genes:
@@ -84,7 +82,7 @@ class AbstractSolver:
             Raise error
             '''
             pass
-        
+
         self.kwargs = kwargs
 
     def calculate_fitness(self, population):
@@ -102,13 +100,12 @@ class AbstractSolver:
         # Convert the results to numpy array and return
         return np.array(result)
 
-
     def solve(self):
         """Runs the genetic algorithm for the number of iterations
         and optimizes for the given problem.
         """
         generation = 0
-        start_time = datetime.datetime.now()
+        # start_time = datetime.datetime.now()
 
         average_fitness = []
         max_fitness = []
@@ -127,8 +124,8 @@ class AbstractSolver:
             generation += 1
 
             if generation % gen_interval == 0 and self.verbose:
-                # logging.info(f"Iter number: {generation}")
-                # logging.info(f"Best fitness: {fitness[0]}")
+                logging.info(f"#Iter: {generation}")
+                logging.info(f"#Best_fit: {fitness[0]}")
 
                 print(f"Iter number: {generation}")
                 print(f"Best fitness: {fitness[0]}")
@@ -147,10 +144,6 @@ class AbstractSolver:
 
             ix = np.arange(0, self.pop_cnt - self.min_pop - 1, 2)
 
-            # xp = np.array(
-            #     list(map(lambda _: self.get_crossover_points(), range(self.n_matings)))
-            # )
-
             # Generate the next population
             for i in range(self.n_matings):
                 ma_ind = population[ma[i], :]
@@ -164,10 +157,11 @@ class AbstractSolver:
             # Mutate population
             population = self.mutate_population(population, self.n_mutations)
             # Compute fitness for current population
-            fitness = np.hstack((fitness[0], self.calculate_fitness(population[1:, :])))
+            curr_fitness = self.calculate_fitness(population[1:, :])
+            fitness = np.hstack((fitness[0], curr_fitness))
             # Order fitness and population
             fitness, population = self.sort_by_fitness(fitness, population)
-            
+
             if generation >= self.max_gen:
                 break
 
@@ -179,7 +173,6 @@ class AbstractSolver:
 
         print(f"Best individual: {self.best_individual_}")
         print(f"Best fitness: {self.best_fitness_}")
-    
 
     @staticmethod
     def sort_by_fitness(fitness, population):
@@ -203,7 +196,7 @@ class AbstractSolver:
 
     def select_parents(self, fitness):
         """
-        Selects two parents ma and pa 
+        Selects two parents ma and pa
         Args:
             fitness(list): fitness of current population
             self: Object instance
@@ -213,10 +206,12 @@ class AbstractSolver:
 
         ma = pa = None
 
-        ma = selection.selection_strats[self.selection_type](fitness, self.n_matings)
-        pa = selection.selection_strats[self.selection_type](fitness, self.n_matings)
+        ma = selection.selection_strats[self.selection_type](fitness,
+                                                             self.n_matings)
+        pa = selection.selection_strats[self.selection_type](fitness,
+                                                             self.n_matings)
 
-        return ma,pa
+        return ma, pa
 
     def get_number_mutations(self):
         return math.ceil(self.gene_size * self.mutation_ratio)
@@ -225,9 +220,10 @@ class AbstractSolver:
         """docstring
         """
         child1 = child2 = None
-        child1, child2 = crossover.crossover_strats[self.crossover_type](first_parent, sec_parent)
+        child1, child2 = crossover.\
+            crossover_strats[self.crossover_type](first_parent, sec_parent)
 
-        return child1,child2
+        return child1, child2
 
     def mutate_population(self, population, n_mutation):
         """docstring
@@ -235,11 +231,11 @@ class AbstractSolver:
         chosen_indices = random.sample(range(len(population)), n_mutation)
 
         for index in chosen_indices:
-           population[index] = mutation.mutation_strats[self.mutation_type](population[index], **self.kwargs)
-        
-        return population
-        
+            population[index] = mutation.\
+                mutation_strats[self.mutation_type](population[index],
+                                                    **self.kwargs)
 
+        return population
 
     @abstractmethod
     def initialize_population(self):

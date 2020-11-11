@@ -40,22 +40,19 @@ class ContinuousGenAlgSolver(AbstractSolver):
         verbose: bool = False,
         **kwargs
     ):
-        """
-        :param fitness_function: can either be a fitness function or
-        a class implementing a fitness function + methods to override
-        the default ones: create_offspring, mutate_population, initialize_population
-        :param n_genes: number of genes (variables) to have in each chromosome
-        :param max_gen: maximum number of generations to perform the optimization
-        :param pop_size: population size
-        :param mutation_rate: rate at which random mutations occur
-        :param selection_rate: percentage of the population to be selected for crossover
-        :param selection_strategy: strategy to use for selection
-        :param verbose: whether to print iterations status
-        :param show_stats: whether to print stats at the end
-        :param plot_results: whether to plot results of the run at the end
-        :param variables_limits: limits for each variable [(x1_min, x1_max), (x2_min, x2_max), ...].
-        If only one tuple is provided, then it is assumed the same for every variable
-        :param problem_type: whether problem is of float or integer type
+        """Solves for floating point/integer based problems
+        Arguments
+            fitness_func: The function/class that the solver uses to optimize solution
+            problem_type: Used to initialize population (can be float/int)
+            gene_size: number of genes (variables) to have in each chromosome
+            max_gen: maximum number of generations to perform the optimization
+            pop_cnt: Number of individuals in current population
+            mutation_ratio: rate at which random mutations occur
+            selection_ratio: percentage of the population to be selected for crossover
+            selection_type: type of selection algorithm to be employed
+            mutation_type: Mutation algorithm to be employed
+            verbose: To track/log or not
+            variables_limits: limits for each variable of the form (min, max)
         """
 
         AbstractSolver.__init__(
