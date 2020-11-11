@@ -14,6 +14,7 @@ import random
 # pointers, and this can easily be used in the core library to use the string 
 # to run the function.
 
+
 def insert_mutation(genome):
     """Performs an insert mutation operation on the provided genome. First,
     picks two alleles at random and moves the second allele to be right after
@@ -30,7 +31,7 @@ def insert_mutation(genome):
 
     alleleA = random.randint(0, len(genome) - 1)
     alleleB = random.randint(0, len(genome) - 1)
-    
+
     # Alleles should not be the same
     while alleleA != alleleB:
         alleleB = random.randint(0, len(genome) - 1)
@@ -45,7 +46,7 @@ def insert_mutation(genome):
 
     for shift in range(alleleA + 1, alleleB + 1):
         genome[shift - 1] = genome[shift]
-    
+
     genome[alleleB] = alleleA_val
 
     return genome
@@ -70,13 +71,14 @@ def flip_mutation(genome, total_flips):
     if not all(isinstance(allele, bool) for allele in genome):
         # TODO: Error handling
         pass
-    
+
     for _ in range(total_flips):
         point = random.randint(0, len(genome))
 
         genome[point] = not genome[point]
-    
+
     return genome
+
 
 # ! should this function be restricted to binary values?
 def interchanging_mutation(genome):
@@ -162,8 +164,8 @@ def creep_mutation(
     distribution to sample the random number from, it uses the distribution
     that is provided by the user. The following distributions are available,
     the distribution should be as the value inside quotes.
-    
-    "beta": Beta distribution. alpha and beta are required. And alpha > 0 
+
+    "beta": Beta distribution. alpha and beta are required. And alpha > 0
             and beta > 0.
 
     "exp": Exponential distribution. lambd is required. It is called lambd as
