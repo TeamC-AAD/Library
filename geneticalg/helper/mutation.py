@@ -10,6 +10,11 @@ import random
 # found at http://ijcsit.com/docs/Volume%205/vol5issue03/ijcsit20140503404.pdf
 # Could also cite https://arxiv.org/pdf/1203.3099.pdf
 
+# Defines the dictionary of possible mutations and the corresponding function
+# pointers, and this can easily be used in the core library to use the string 
+# to run the function.
+
+
 def insert_mutation(genome):
     """Performs an insert mutation operation on the provided genome. First,
     picks two alleles at random and moves the second allele to be right after
@@ -24,12 +29,12 @@ def insert_mutation(genome):
         The mutated genome
     """
 
-    alleleA = random.randint(0, len(genome))
-    alleleB = random.randint(0, len(genome))
-    
+    alleleA = random.randint(0, len(genome) - 1)
+    alleleB = random.randint(0, len(genome) - 1)
+
     # Alleles should not be the same
     while alleleA != alleleB:
-        alleleB = random.randint(0, len(genome))
+        alleleB = random.randint(0, len(genome) - 1)
 
     # alleleA needs be always less than alleleB. Swap if needed
     if alleleA > alleleB:
@@ -41,7 +46,7 @@ def insert_mutation(genome):
 
     for shift in range(alleleA + 1, alleleB + 1):
         genome[shift - 1] = genome[shift]
-    
+
     genome[alleleB] = alleleA_val
 
     return genome
@@ -66,13 +71,14 @@ def flip_mutation(genome, total_flips):
     if not all(isinstance(allele, bool) for allele in genome):
         # TODO: Error handling
         pass
-    
+
     for _ in range(total_flips):
         point = random.randint(0, len(genome))
 
         genome[point] = not genome[point]
-    
+
     return genome
+
 
 # ! should this function be restricted to binary values?
 def interchanging_mutation(genome):
@@ -148,8 +154,8 @@ def uniform_mutation(genome, lower_bound, upper_bound):
 
 def creep_mutation(
     genome, distribution, 
-    alpha=None, beta=None, 
-    lambd=None, mu=None, 
+    alpha=None, beta=None,
+    lambd=None, mu=None,
     sigma=None, kappa=None
 ):
     """This mutation operator performs a creep mutation on the genome.
@@ -158,8 +164,8 @@ def creep_mutation(
     distribution to sample the random number from, it uses the distribution
     that is provided by the user. The following distributions are available,
     the distribution should be as the value inside quotes.
-    
-    "beta": Beta distribution. alpha and beta are required. And alpha > 0 
+
+    "beta": Beta distribution. alpha and beta are required. And alpha > 0
             and beta > 0.
 
     "exp": Exponential distribution. lambd is required. It is called lambd as
@@ -284,3 +290,13 @@ def creep_mutation(
         pass
 
     return genome
+
+
+mutation_strats = {
+    "insert"        :   insert_mutation,
+    "flip"          :   flip_mutation,
+    "interchanging" :   interchanging_mutation,
+    "reversing"     :   reversing_mutation,
+    "uniform"       :   uniform_mutation,
+    "creep"         :   creep_mutation
+}
