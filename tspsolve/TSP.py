@@ -112,17 +112,18 @@ def test_tsp(map):
         max_gen=500, # maximum number of generations
         mutation_ratio=0.4, # mutation rate to apply to the population
         selection_ratio=0.6, # percentage of the population to select for mating
-        selection_type="linear_rank",
+        selection_type="roulette_wheel",
         crossover_type="one_point",
         mutation_type="insert",
         verbose=True,
         cv=0
     )
 
-    solver.solve()
+    for curr_data in solver.solve():
+        print(curr_data)
 
 ## Test maps
-test_tsp("map5.txt")
+test_tsp("map7.txt")
 
 
 
