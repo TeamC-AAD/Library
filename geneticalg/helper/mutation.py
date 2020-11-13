@@ -92,12 +92,12 @@ def interchanging_mutation(genome):
     Returns:
         The mutated genome.
     """
-    alleleA = random.randint(0, len(genome))
-    alleleB = random.randint(0, len(genome))
+    alleleA = random.randint(0, len(genome)-1)
+    alleleB = random.randint(0, len(genome)-1)
 
     # Alleles should not be the same
-    while alleleA != alleleB:
-        alleleB = random.randint(0, len(genome))
+    while alleleA == alleleB:
+        alleleB = random.randint(0, len(genome)-1)
 
     temp_gene = genome[alleleA]
     genome[alleleA] = genome[alleleB]
