@@ -30,6 +30,7 @@ class AbstractSolver:
         crossover_type: str = "one_point",
         excluded_genes: Sequence = None,
         verbose: bool = False,
+        cv=1,
         **kwargs
     ):
         seed = np.random.randint(0, 10)
@@ -47,6 +48,7 @@ class AbstractSolver:
         self.verbose = verbose
         self.problem_type = float
         self.n_mutations = self.get_number_mutations()
+        self.cv = cv
 
         '''
         Base Tests
@@ -128,7 +130,7 @@ class AbstractSolver:
                 logging.info(f"#Best_fit: {fitness[0]}")
 
                 print(f"Iter number: {generation}")
-                print(f"Best fitness: {fitness[0]}")
+                print(f"Best fitness: {1/fitness[0]}")
                 print(f"best individual: {population[0]}")
 
             # curr_avg_fitness = np.mean(np.array(average_fitness))
@@ -221,7 +223,7 @@ class AbstractSolver:
         """
         child1 = child2 = None
         child1, child2 = crossover.\
-            crossover_strats[self.crossover_type](first_parent, sec_parent)
+            crossover_strats[self.crossover_type](first_parent, sec_parent , self.cv)
 
         return child1, child2
 
