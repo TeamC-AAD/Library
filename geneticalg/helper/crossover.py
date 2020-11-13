@@ -34,13 +34,13 @@ def one_point_crossover(p1 , p2 , cv=1):
             child1.append(b2[i])
             child2.append(b1[i])
 
-        for _ in range(2):
-            beta1 = np.random.randint(0,N)
-            beta2 = np.random.randint(0,N)
 
-            child1[beta1] , child1[beta2] = child1[beta2] , child1[beta1]
-            child2[beta1] , child2[beta2] = child2[beta2] , child2[beta1]
-    
+        beta1 = np.random.randint(0,N)
+        beta2 = np.random.randint(0,N)
+
+        child1[beta1] , child1[beta2] = child1[beta2] , child1[beta1]
+        child2[beta1] , child2[beta2] = child2[beta2] , child2[beta1]
+
     return child1,child2
 
 def two_point_crossover(p1 , p2 , cv=1):
