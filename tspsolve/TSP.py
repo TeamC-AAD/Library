@@ -74,10 +74,10 @@ class TSPSolver(AbstractSolver):
         population = np.empty(shape=(self.pop_cnt, self.gene_size))
         for i in range(0,self.pop_cnt):
             a = []
-            for j in range(0,self.gene_size):
+            for j in range(0, self.gene_size):
                 a.append((np.random.random(1)[0],j+2))
             a = np.array(a)
-            dt = [('col1' , a.dtype) , ('col2' , a.dtype)]
+            dt = [('col1', a.dtype), ('col2', a.dtype)]
             assert a.flags['C_CONTIGUOUS']
             b = a.ravel().view(dt)
             b.sort(order=['col1','col2'])
@@ -87,15 +87,18 @@ class TSPSolver(AbstractSolver):
 
         return population
 
+
 INT_MAX = float('inf')
+
 
 def tsp_fitness(chromosome , map):
     sum = map[0][np.int(chromosome[0])-1]
     N = len(chromosome)
     for i in range(1 , len(chromosome)):
         sum = sum+map[np.int(chromosome[i]-1)][np.int(chromosome[i-1]-1)]
-    sum = sum +map[0][np.int(chromosome[N-1])-1]
+    sum = sum + map[0][np.int(chromosome[N-1])-1]
     return 1/sum
+
 
 def test_tsp(map):
     with open(map) as file:
@@ -108,25 +111,21 @@ def test_tsp(map):
     solver = TSPSolver(
         gene_size=len(scores)-1,
         fitness_func=lambda a : tsp_fitness(a , scores),
-        pop_cnt=1100, # population size (number of individuals)
-        max_gen=400, # maximum number of generations
+        pop_cnt=100, # population size (number of individuals)
+        max_gen=1600, # maximum number of generations
         mutation_ratio=0.4, # mutation rate to apply to the population
         selection_ratio=0.6, # percentage of the population to select for mating
-        selection_type="tournament",
+        selection_type="roulette_wheel",
         crossover_type="one_point",
         mutation_type="insert",
         verbose=True,
         cv=0
     )
 
-    solver.solve()
+    for curr_data in solver.solve():
+        print(curr_data)
 
-## Test maps
+
+# Test maps
 test_tsp("map7.txt")
-
-
-
-
-
-
 

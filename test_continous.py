@@ -15,4 +15,6 @@ solver = ContinuousGenAlgSolver(
 )
 
 
-solver.solve()
+for curr in solver.solve():
+    print(curr)
+

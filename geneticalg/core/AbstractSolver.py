@@ -8,6 +8,8 @@ from typing import Sequence
 
 import numpy as np
 
+import json
+
 from geneticalg.helper import mutation
 from geneticalg.helper import selection
 from geneticalg.helper import crossover
@@ -102,7 +104,7 @@ class AbstractSolver:
         # Convert the results to numpy array and return
         return np.array(result)
 
-    def solve(self):
+    def solve(self, generate=False):
         """Runs the genetic algorithm for the number of iterations
         and optimizes for the given problem.
         """
@@ -129,9 +131,13 @@ class AbstractSolver:
                 logging.info(f"#Iter: {generation}")
                 logging.info(f"#Best_fit: {fitness[0]}")
 
-                print(f"Iter number: {generation}")
-                print(f"Best fitness: {1/fitness[0]}")
-                print(f"best individual: {population[0]}")
+                curr_data = {
+                    'iter': generation,
+                    'fitness': 1/fitness[0],
+                    'best_ind': population[0]
+                }
+
+                yield curr_data
 
             # curr_avg_fitness = np.mean(np.array(average_fitness))
 
