@@ -6,6 +6,8 @@ import random
 from abc import abstractmethod
 from typing import Sequence
 
+import json
+
 import numpy as np
 
 from geneticalg.helper import mutation
@@ -127,11 +129,18 @@ class AbstractSolver:
 
             if generation % gen_interval == 0 and self.verbose:
                 logging.info(f"#Iter: {generation}")
-                logging.info(f"#Best_fit: {fitness[0]}")
+                logging.info(f"#Best_fit: 1/{fitness[0]}")
 
-                print(f"Iter number: {generation}")
-                print(f"Best fitness: {1/fitness[0]}")
-                print(f"best individual: {population[0]}")
+                curr_data = {
+                    'iter': generation,
+                    'fitness': 1/fitness[0],
+                    'best_ind': population[0]
+                }
+                yield curr_data
+
+                # print(f"Iter number: {generation}")
+                # print(f"Best fitness: {1/fitness[0]}")
+                # print(f"best individual: {population[0]}")
 
             # curr_avg_fitness = np.mean(np.array(average_fitness))
 
