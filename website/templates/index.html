@@ -1,9 +1,10 @@
 {% extends "base.html" %}
+
 {% block content %}
     <div class="landing-container">
         <div class="main-title">GeneAl : The Genetic Algorithm Library</div>
         <div class="button-container">
-            <button id="explore-button" class="button">
+            <button id="explore-button" class="button" onclick="document.getElementById('explore-section').scrollIntoView(true);">
                 <i class="fas fa-compass"></i><span>Explore</span>
             </button>
             <button id="github-button" class="button">
@@ -11,7 +12,18 @@
             </button>
         </div>
     </div>
-    <div class="explore-container">
-        BRUH
+    <div class="explore-container" id="explore-section">
+        <h1 id="explore-title">Explore</h1>
     </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        window.onscroll = function() {scrollHandler()};
+
+        function scrollHandler() {
+            let scroll = document.documentElement.scrollTop;
+            console.log(1 / (1 + Math.exp(scroll / 5000)) * 200);
+        }
+    </script>
 {% endblock %}

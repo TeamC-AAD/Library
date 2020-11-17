@@ -5,6 +5,14 @@ from .TSP import TSPSolver, tsp_fitness
 import json
 import random
 from time import sleep
+import networkx as nx
+import matplotlib
+
+matplotlib.use('Agg')
+
+import matplotlib.pyplot as plt
+
+
 
 app = Flask(__name__)
 
@@ -16,23 +24,32 @@ def hello_world():
 @app.route('/chart-data')
 def chart_data():
     print("Called")
-    solver = test_tsp('map7.txt')
+    solver, adjacency_matrix = test_tsp('map7.txt')
 
     def generate_data(solver):
+        best_ind = []
         for curr_data in solver.solve():
             print(curr_data)
             curr = {
                 'iter': curr_data['iter'],
                 'fitness': curr_data['fitness']
             }
+
+            best_ind = curr_data['best_ind']
+
             print(f"ACTUAL: {curr}")
             json_data = json.dumps(curr)
             yield f"data:{json_data}\n\n"
 
+        draw_graph(adjacency_matrix, best_ind)
+
         # Done here, generate fake data
         done_signal = {
-            'iter': -1
+            'iter': -1,
+            'best_ind': best_ind.tolist(),
+            'graph': adjacency_matrix
         }
+
         json_data = json.dumps(done_signal)
         yield f"data:{json_data}\n\n"
 
@@ -44,10 +61,27 @@ def chart_data():
 
 @app.route('/chart_view_test')
 def run_TSP_tester():
-    solver = test_tsp('map7.txt')
+    solver, matrix = test_tsp('map7.txt')
     for curr_data in solver.solve():
         print(curr_data)
     return "Done with test"
+
+
+def draw_graph(adjacency_matrix, path):
+    """ Draws the network matrix
+    """
+    adjacency_matrix = np.array(adjacency_matrix)
+    rows, cols = np.where(adjacency_matrix != 0)
+    edges = zip(rows.tolist(), cols.tolist())
+    gr = nx.Graph()
+    gr.add_edges_from(edges)
+    nx.draw(gr, node_size=500)
+    # nx.drawing.nx_pylab.draw_networkx_nodes(gr, )
+    plt.plot()
+    plt.savefig('map.png')
+
+
+
 
 def test_tsp(map):
     with open(map) as file:
@@ -61,7 +95,7 @@ def test_tsp(map):
         gene_size=len(scores)-1,
         fitness_func=lambda a : tsp_fitness(a , scores),
         pop_cnt=600, # population size (number of individuals)
-        max_gen=500, # maximum number of generations
+        max_gen=300, # maximum number of generations
         mutation_ratio=0.4, # mutation rate to apply to the population
         selection_ratio=0.6, # percentage of the population to select for mating
         selection_type="stochastic",
@@ -71,7 +105,7 @@ def test_tsp(map):
         cv=0
     )
 
-    return solver
+    return solver, scores.tolist()
 
 
 if __name__ == '__main__':

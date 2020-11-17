@@ -85,11 +85,13 @@
             // }
             if (data.iter == -1) {
                 console.log("Done with everything");
+                // draw graph
+                // data.best_ind
+            } else {
+                config.data.labels.push(data.iter);
+                config.data.datasets[0].data.push(data.fitness);
+                lineChart.update();
             }
-            config.data.labels.push(data.iter);
-            config.data.datasets[0].data.push(data.fitness);
-            lineChart.update();
-            
 
             console.log(data.iter, data)
         }
