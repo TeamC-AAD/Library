@@ -9,7 +9,7 @@ from abc import ABCMeta, abstractmethod
 import sys
 sys.path.append("..")
 from geneticalg.core.ContinuousSolver import ContinuousGenAlgSolver
-from eqnsolve.eqn6 import *
+from eqnsolve.system_lineq import *
 import pandas as pd
 
 
