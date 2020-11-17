@@ -31,7 +31,7 @@
             data: {
                 labels: [],
                 datasets: [{
-                    label: "Random Dataset",
+                    label: "Fitness",
                     backgroundColor: 'rgb(255, 99, 132)',
                     borderColor: 'rgb(255, 99, 132)',
                     data: [],
@@ -42,7 +42,7 @@
                 responsive: true,
                 title: {
                     display: true,
-                    text: 'Creating Real-Time Charts with Flask'
+                    text: 'Solving TSP using genetic algorithms'
                 },
                 tooltips: {
                     mode: 'index',
@@ -79,9 +79,12 @@
 
         source.onmessage = function (event) {
             const data = JSON.parse(event.data);
-            if (config.data.labels.length === 20) {
-                config.data.labels.shift();
-                config.data.datasets[0].data.shift();
+            // if (config.data.labels.length === 20) {
+            //     config.data.labels.shift();
+            //     config.data.datasets[0].data.shift();
+            // }
+            if (data.iter == -1) {
+                console.log("Done with everything");
             }
             config.data.labels.push(data.iter);
             config.data.datasets[0].data.push(data.fitness);

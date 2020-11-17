@@ -16,10 +16,9 @@ def hello_world():
 @app.route('/chart-data')
 def chart_data():
     print("Called")
-    # solver = test_tsp('map7.txt')
-    def generate_data():
-        solver = test_tsp('map7.txt')
+    solver = test_tsp('map7.txt')
 
+    def generate_data(solver):
         for curr_data in solver.solve():
             print(curr_data)
             curr = {
@@ -30,7 +29,17 @@ def chart_data():
             json_data = json.dumps(curr)
             yield f"data:{json_data}\n\n"
 
-    return Response(generate_data(), mimetype='text/event-stream')
+        # Done here, generate fake data
+        done_signal = {
+            'iter': -1
+        }
+        json_data = json.dumps(done_signal)
+        yield f"data:{json_data}\n\n"
+
+        while True:  # Stop client from redrawing graph
+            True
+
+    return Response(generate_data(solver), mimetype='text/event-stream')
 
 
 @app.route('/chart_view_test')

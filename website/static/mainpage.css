@@ -1,0 +1,84 @@
+html, body {
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    margin: 0 0;
+}
+
+body {
+    background: linear-gradient(252.44deg, rgba(86, 128, 233, 0.75) 50.52%, rgba(136, 96, 208, 0.75) 100%), 
+                linear-gradient(107.56deg, rgba(132, 206, 235, 0.25) 0%, rgba(90, 137, 234, 0.25) 100%);
+}
+
+.landing-container {
+    width: 100%;
+    height: 100%;
+}
+
+.main-title {
+    position: absolute;
+    width: 100%;
+    top: 35%;
+
+    transform: translateY(-50%);
+
+    text-align: center;
+
+    font-family: 'Montserrat', sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 3.3vw;
+
+    color: #FFFFFF;
+}
+
+.button-container {
+    position: absolute;
+    width: 100%;
+    top: 65%;
+
+    display: flex;
+    justify-content: space-around;
+}
+
+.button {
+    width: 16.72%; /*321px*/
+    height: 7.78%; /*84px*/
+
+    transform: translateY(-50%);
+
+    background: linear-gradient(90deg, #8860D0 0%, #5680E9 100%);
+    border: 1px solid #FFFFFF;
+    box-sizing: border-box;
+    border-radius: 16px;
+
+    outline: none;
+    line-height: 200%;
+
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 1.875vw;
+    display: inline-block;
+    text-align: center;
+
+    color: #FFFFFF;
+}
+
+#explore-button {
+    margin-left: 20%;
+}
+
+#github-button {
+    margin-right: 20%;
+}
+
+.button span {
+    margin-left: 10px;
+}
+
+.explore-section {
+    width: 100%;
+    height: 100%;
+}
