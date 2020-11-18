@@ -14,6 +14,13 @@
     </div>
     <div class="explore-container" id="explore-section">
         <h1 id="explore-title">Explore</h1>
+        <div class="explore-container">
+            <div class="explore-card" id="tsp-solve"></div>
+        </div>
+    </div>
+    <div class="group-bar">
+        <span class="group-bar-text">Created By Team-C</span>
+        <div class="group-bar-line"></div>
     </div>
 {% endblock %}
 
@@ -23,7 +30,20 @@
 
         function scrollHandler() {
             let scroll = document.documentElement.scrollTop;
-            console.log(1 / (1 + Math.exp(scroll / 5000)) * 200);
+            let base_func = 1 - (1 / (1 + Math.exp(scroll / 1000)) * 2); /* Range would be from 0 to 1 */
+
+            let startA = 252.44;
+            let startB = 20;
+
+            let rangeA = 240;
+            let rangeB = 220;
+
+            let valueA = (base_func * rangeA + startA) % 360;
+            let valueB = (base_func * rangeB + startB) % 360;
+
+            document.body.style.backgroundImage = "linear-gradient(" + valueA + "deg, rgba(86, 128, 233, 0.75) 50.52%, rgba(136, 96, 208, 0.75) 100%), " + "linear-gradient(" + valueB + "deg, rgba(132, 206, 235, 0.8) 0%, rgba(90, 137, 234, 0.8) 100%)";
+
+            console.log(window.getComputedStyle(document.body, false).backgroundImage);
         }
     </script>
 {% endblock %}

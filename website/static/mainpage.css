@@ -11,7 +11,7 @@ html, body {
 
 body {
     background: linear-gradient(252.44deg, rgba(86, 128, 233, 0.75) 50.52%, rgba(136, 96, 208, 0.75) 100%), 
-                linear-gradient(107.56deg, rgba(132, 206, 235, 0.25) 0%, rgba(90, 137, 234, 0.25) 100%);
+                linear-gradient(20deg, rgba(132, 206, 235, 0.8) 0%, rgba(90, 137, 234, 0.8) 100%);
     background-repeat: no-repeat;
     background-attachment: fixed;
 
@@ -112,4 +112,47 @@ body::-webkit-scrollbar {
     font-size: 64px;
 
     color: #FFFFFF;
+}
+
+.group-bar {
+    position: fixed;
+    width: 242px;
+    height: 36px;
+    top: 92.6%;
+    left: 100%;
+
+    transform: translateX(-100%);
+}
+
+.group-bar-line {
+    position: absolute;
+    width: 10vw;
+    height: 0px;
+    left: 100%;
+    top: 100%;
+
+    transform: translate(-100%, -100%);
+
+    border: 1px solid #FFFFFF;
+}
+
+.group-bar-text {
+    position: absolute;
+    width: 98%;
+    top: 45%;
+
+    transform: translateY(-50%);
+
+    font-family: 'Montserrat', sans-serif;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 1.25vw;
+
+    text-align: right;
+
+    color: #FFFFFF;
+}
+
+.explore-container {
+    width: 85%;
 }
