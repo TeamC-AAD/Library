@@ -41,7 +41,7 @@ def chart_data():
             json_data = json.dumps(curr)
             yield f"data:{json_data}\n\n"
 
-        draw_graph(adjacency_matrix, best_ind)
+        # draw_graph(adjacency_matrix, best_ind)
 
         # Done here, generate fake data
         done_signal = {
@@ -61,7 +61,7 @@ def chart_data():
 
 @app.route('/chart_view_test')
 def run_TSP_tester():
-    solver, matrix = test_tsp('map7.txt')
+    solver, matrix = test_tsp('map5.txt')
     for curr_data in solver.solve():
         print(curr_data)
     return "Done with test"
@@ -92,7 +92,7 @@ def test_tsp(map):
     scores = scores.to_numpy()
     scores = scores.astype(np.float)
     solver = TSPSolver(
-        gene_size=len(scores)-1,
+        gene_size=len(scores),
         fitness_func=lambda a : tsp_fitness(a , scores),
         pop_cnt=600, # population size (number of individuals)
         max_gen=300, # maximum number of generations

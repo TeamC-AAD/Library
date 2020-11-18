@@ -1,101 +1,181 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Creating Real-Time Charts with Flask</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css" rel="stylesheet">
 </head>
+
 <body>
-<div class="container">
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-body">
-                    <canvas id="canvas"></canvas>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <canvas id="canvas"></canvas>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<!--suppress JSUnresolvedLibraryURL -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
-<!--suppress JSUnresolvedLibraryURL -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
-<!--suppress JSUnresolvedLibraryURL -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
-<script>
-    $(document).ready(function () {
-        const config = {
-            type: 'line',
-            data: {
-                labels: [],
-                datasets: [{
-                    label: "Fitness",
-                    backgroundColor: 'rgb(255, 99, 132)',
-                    borderColor: 'rgb(255, 99, 132)',
-                    data: [],
-                    fill: false,
-                }],
-            },
-            options: {
-                responsive: true,
-                title: {
-                    display: true,
-                    text: 'Solving TSP using genetic algorithms'
-                },
-                tooltips: {
-                    mode: 'index',
-                    intersect: false,
-                },
-                hover: {
-                    mode: 'nearest',
-                    intersect: true
-                },
-                scales: {
-                    xAxes: [{
-                        display: true,
-                        scaleLabel: {
-                            display: true,
-                            labelString: 'iter'
-                        }
+    <!--suppress JSUnresolvedLibraryURL -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <!--suppress JSUnresolvedLibraryURL -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <!--suppress JSUnresolvedLibraryURL -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
+    <!--D3.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/6.2.0/d3.min.js"></script>
+    
+    <script>
+        $(document).ready(function () {
+            const config = {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: "Fitness",
+                        backgroundColor: 'rgb(255, 99, 132)',
+                        borderColor: 'rgb(255, 99, 132)',
+                        data: [],
+                        fill: false,
                     }],
-                    yAxes: [{
+                },
+                options: {
+                    responsive: true,
+                    title: {
                         display: true,
-                        scaleLabel: {
+                        text: 'Solving TSP using genetic algorithms'
+                    },
+                    tooltips: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    hover: {
+                        mode: 'nearest',
+                        intersect: true
+                    },
+                    scales: {
+                        xAxes: [{
                             display: true,
-                            labelString: 'fitness'
-                        }
-                    }]
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'iter'
+                            }
+                        }],
+                        yAxes: [{
+                            display: true,
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'fitness'
+                            }
+                        }]
+                    }
                 }
+            };
+
+            const context = document.getElementById('canvas').getContext('2d');
+
+            const lineChart = new Chart(context, config);
+
+            const source = new EventSource("/chart-data");
+
+            source.onmessage = function (event) {
+                const data = JSON.parse(event.data);
+                // if (config.data.labels.length === 20) {
+                //     config.data.labels.shift();
+                //     config.data.datasets[0].data.shift();
+                // }
+                if (data.iter == -1) {
+                    console.log("Done with everything");
+                    // draw graph
+                    // data.best_ind
+                } else {
+                    config.data.labels.push(data.iter);
+                    config.data.datasets[0].data.push(data.fitness);
+                    lineChart.update();
+                }
+
+                console.log(data.iter, data)
             }
-        };
 
-        const context = document.getElementById('canvas').getContext('2d');
 
-        const lineChart = new Chart(context, config);
 
-        const source = new EventSource("/chart-data");
+            // Test d3.js
 
-        source.onmessage = function (event) {
-            const data = JSON.parse(event.data);
-            // if (config.data.labels.length === 20) {
-            //     config.data.labels.shift();
-            //     config.data.datasets[0].data.shift();
-            // }
-            if (data.iter == -1) {
-                console.log("Done with everything");
-                // draw graph
-                // data.best_ind
-            } else {
-                config.data.labels.push(data.iter);
-                config.data.datasets[0].data.push(data.fitness);
-                lineChart.update();
+            let nodes = [1, 2, 3];
+            let matrix = [
+                [2, 0, 1],
+                [2, 4, 0],
+                [1, 2, 5]
+            ];
+
+            let links = [];
+            nodes.forEach(function (d, i) {
+                console.log('parent: ' + d, i);
+                matrix[i].forEach(function (e, j) {
+                    console.log(i, j)
+                    if (matrix[i][j] > 0) {
+                        links.push({ source: i, target: j });
+                    }
+                });
+            });
+
+            console.log(nodes);
+            console.log(links);
+
+            var width = 640, height = 480;
+
+            var svg = d3.select("body").append("svg")
+                .attr("width", width)
+                .attr("height", height);
+
+            var force = d3.layout.force() //Here we specify the paramaters
+                .size([width, height])
+                .nodes(d3.values(nodes)) //this is where we pass the nodes of our dataset
+                .links(links) // source of links
+                .on("tick", tick) //on click of the nodes
+                .linkDistance(300) //How far apart the nodes are
+                .start(); //Start to render
+
+            //add link and nodes
+            var link = svg.selectAll(".link")
+                .data(links) //get the data
+                .enter().append('line') //binds the data in the links array to the svg 
+                .attr("class", "link") //css styling
+
+            var node = svg.selectAll(".node")
+                .data(force.nodes()) //way to reference the nodes in the force layout
+                .enter().append("g");
+
+            node.append("circle")
+                .attr("class", "node")
+                .attr("r", width * 0.03); //radius of the circle
+
+            function tick(e) {
+                node.attr("transform", function (d) {
+                    return "translate(" + [d.x, d.y] + ")"
+                })
+                    .call(force.drag); //the relative location will activate a drag once the node is clicked
+
+                link.attr("x1", function (d) {
+                    return d.source.x;
+                })
+                    .attr("y1", function (d) {
+                        return d.source.y;
+                    })
+                    .attr("x2", function (d) {
+                        return d.target.x;
+                    })
+                    .attr("y2", function (d) {
+                        return d.target.y;
+                    })
             }
 
-            console.log(data.iter, data)
-        }
-    });
-</script>
+        });
+    </script>
 </body>
+
 </html>

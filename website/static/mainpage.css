@@ -94,24 +94,63 @@ body::-webkit-scrollbar {
 }
 
 .explore-container {
-    position: absolute;
+    position: relative;
     width: 100%;
-    height: 100%;
+    height: 200%;
+
+    height: calc(2 * 20% + 3 * 26vh + 4 * 8.4vh);
 }
 
 #explore-title {
     position: absolute;
     width: 100%;
-    top: 2%;
+    top: 5%;
+    margin: 0;
 
     text-align: center;
 
-    font-family: Montserrat;
+    font-family: 'Montserrat', sans-serif;
     font-style: normal;
     font-weight: bold;
     font-size: 64px;
 
     color: #FFFFFF;
+}
+
+.explore-cards-container {
+    position: absolute;
+    width: 75%;
+
+    top: 20%;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    background: transparent;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.explore-card {
+    width: 100%;
+    height: 26vh;
+    background: white;
+
+    margin: 8.4vh 0;
+
+    display: inline-block;
+    box-sizing: border-box;
+}
+.explore-card:first-child { margin-top: 0; }
+.explore-card:last-child { margin-bottom: 0; }
+
+#footer {
+    width: 100%;
+    height: 11%;
+
+    background: red;
 }
 
 .group-bar {
@@ -151,8 +190,4 @@ body::-webkit-scrollbar {
     text-align: right;
 
     color: #FFFFFF;
-}
-
-.explore-container {
-    width: 85%;
 }
