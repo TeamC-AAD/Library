@@ -27,8 +27,8 @@
     <!--suppress JSUnresolvedLibraryURL -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
     <!--D3.js -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/6.2.0/d3.min.js"></script>
-    
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+
     <script>
         $(document).ready(function () {
             const config = {
@@ -83,7 +83,7 @@
             const source = new EventSource("/chart-data");
 
             source.onmessage = function (event) {
-                const data = JSON.parse(event.data);
+                const data = JSON.parse(-event.data);
                 // if (config.data.labels.length === 20) {
                 //     config.data.labels.shift();
                 //     config.data.datasets[0].data.shift();
