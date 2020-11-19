@@ -133,9 +133,10 @@
                     .force("link", d3.forceLink().id(function (d) { return d.id; }))
                     //.force("charge", d3.forceManyBody().strength(-200))
                     .force('charge', d3.forceManyBody()
-                        .strength(-500)
+                        .strength(-550)
                         .theta(0.8)
-                        .distanceMax(150) 
+                        .distanceMax(1150) 
+                        .distanceMin(50)
                     )
                     // 		.force('collide', d3.forceCollide()
                     //       .radius(d => 40)
@@ -182,7 +183,7 @@
                         }
                         // console.log("has " + curr_type.toString());
                         if (matrix[i][j] > 0) {
-                            links.push({ 
+                            links.push({
                                 source: (i+1).toString(), 
                                 target: (j+1).toString(),
                                 value: matrix[i][j],
@@ -216,7 +217,7 @@
                         .style("stroke", function(d) {
                             console.log(d);
                             if (d.type == "a") {
-                                return "#000";
+                                return "rgba(120, 120, 120, 0.3)";
                             } else {
                                 return "#FF0000";
                             }
