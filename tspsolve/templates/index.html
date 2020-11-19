@@ -21,7 +21,7 @@
         </div>
     </div>
 
-    <svg width="960" height="600"></svg>
+    <svg width="1060" height="900"></svg>
     <!--suppress JSUnresolvedLibraryURL -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
     <!--suppress JSUnresolvedLibraryURL -->
@@ -90,36 +90,39 @@
                 //     config.data.labels.shift();
                 //     config.data.datasets[0].data.shift();
                 // }
-                if (data.iter == -1) {
-                    console.log("Done with everything");
-                    // draw graph
-                    // data.best_ind
-                    const graph = {
-                        "nodes": [
-                            { "id": "1", "group": 1 },
-                            { "id": "2", "group": 2 },
-                            { "id": "4", "group": 3 },
-                            { "id": "8", "group": 4 },
-                            { "id": "16", "group": 5 },
-                        ],
-                        "links": [
-                            { "source": "1", "target": "2", "value": 1 },
-                            { "source": "2", "target": "4", "value": 1 },
-                            { "source": "4", "target": "8", "value": 1 },
-                            { "source": "4", "target": "8", "value": 1 },
-                            { "source": "8", "target": "16", "value": 1 },
-                            { "source": "16", "target": "1", "value": 1 }
-                        ]
-                    }
-                    console.log("data best individual is ");
-                    console.log(data.best_ind);
 
-                    generate_graph(data.graph, data.best_ind);
-                } else {
-                    config.data.labels.push(data.iter);
-                    config.data.datasets[0].data.push(data.fitness);
-                    lineChart.update();
+                // Push the data points to the fitness curve
+                config.data.labels.push(data.iter);
+                config.data.datasets[0].data.push(data.fitness);
+                lineChart.update();
+
+                // Re-draw the graph in d3
+                console.log("Delete all the points in the graph");
+                d3.select("svg").selectAll("*").remove();
+                // draw graph
+                // data.best_ind
+                const graph = {
+                    "nodes": [
+                        { "id": "1", "group": 1 },
+                        { "id": "2", "group": 2 },
+                        { "id": "4", "group": 3 },
+                        { "id": "8", "group": 4 },
+                        { "id": "16", "group": 5 },
+                    ],
+                    "links": [
+                        { "source": "1", "target": "2", "value": 1 },
+                        { "source": "2", "target": "4", "value": 1 },
+                        { "source": "4", "target": "8", "value": 1 },
+                        { "source": "4", "target": "8", "value": 1 },
+                        { "source": "8", "target": "16", "value": 1 },
+                        { "source": "16", "target": "1", "value": 1 }
+                    ]
                 }
+                console.log("data best individual is ");
+                console.log(data.best_ind);
+
+                if (data.iter == -1)
+                generate_graph(data.graph, data.best_ind);
 
                 console.log(data.iter, data)
             }
@@ -133,11 +136,14 @@
                     .force("link", d3.forceLink().id(function (d) { return d.id; }))
                     //.force("charge", d3.forceManyBody().strength(-200))
                     .force('charge', d3.forceManyBody()
-                        .strength(-550)
-                        .theta(0.8)
-                        .distanceMax(1150) 
-                        .distanceMin(50)
+                        // .strength(-1800)
+                        // .theta(0.8)
+                        // .distanceMax(1150) 
+                        // .distanceMin(50)
                     )
+                    .force('collide', d3.forceCollide(function(d) {
+                        return d.value 
+                    }))
                     // 		.force('collide', d3.forceCollide()
                     //       .radius(d => 40)
                     //       .iterations(2)

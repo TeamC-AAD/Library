@@ -24,18 +24,19 @@ def hello_world():
 @app.route('/chart-data')
 def chart_data():
     print("Called")
-    solver, adjacency_matrix = test_tsp('map7.txt')
+    solver, adjacency_matrix = test_tsp('map6.txt')
 
     def generate_data(solver):
         best_ind = []
         for curr_data in solver.solve():
             print(curr_data)
+            best_ind = curr_data['best_ind']
             curr = {
                 'iter': curr_data['iter'],
-                'fitness': curr_data['fitness']
+                'fitness': curr_data['fitness'],
+                'best_ind': best_ind.tolist(),
+                'graph': adjacency_matrix
             }
-
-            best_ind = curr_data['best_ind']
 
             print(f"ACTUAL: {curr}")
             json_data = json.dumps(curr)
