@@ -9,27 +9,16 @@ html, body {
     scroll-behavior: smooth;
 }
 
-html { background-color: white; }
-
 body {
     background: linear-gradient(252.44deg, rgba(86, 128, 233, 0.75) 50.52%, rgba(136, 96, 208, 0.75) 100%), 
                 linear-gradient(20deg, rgba(132, 206, 235, 0.8) 0%, rgba(90, 137, 234, 0.8) 100%);
     background-repeat: no-repeat;
     background-attachment: fixed;
 
+    color: #FFFFFF;
+
     -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
-
-    clip-path: circle(2%);
-
-    transition: clip-path 2s ease-out;
-
-    animation: loader 1s alternate infinite;
-}
-
-@keyframes loader {
-    from {transform: translateY(-5%);}
-    to {transform: translateY(5%);}
+    scrollbar-width: none;  /* Firefox */   
 }
 
 body::-webkit-scrollbar {
@@ -54,8 +43,6 @@ body::-webkit-scrollbar {
     font-style: normal;
     font-weight: normal;
     font-size: 3.3vw;
-
-    color: #FFFFFF;
 }
 
 .button-container {
@@ -67,11 +54,8 @@ body::-webkit-scrollbar {
     justify-content: space-around;
 }
 
-.button {
+.btn {
     width: 16.72%; /*321px*/
-    height: 7.78%; /*84px*/
-
-    transform: translateY(-50%);
 
     background: linear-gradient(90deg, #8860D0 0%, #5680E9 100%);
     border: 1px solid #FFFFFF;
@@ -94,6 +78,11 @@ body::-webkit-scrollbar {
     color: #FFFFFF;
 }
 
+.btn-landing {
+    height: 7.78%; /*84px*/
+    transform: translateY(-50%);
+}
+
 #explore-button {
     margin-left: 20%;
 }
@@ -102,7 +91,7 @@ body::-webkit-scrollbar {
     margin-right: 20%;
 }
 
-.button span {
+.btn-landing span {
     margin-left: 10px;
 }
 
@@ -126,8 +115,6 @@ body::-webkit-scrollbar {
     font-style: normal;
     font-weight: bold;
     font-size: 64px;
-
-    color: #FFFFFF;
 }
 
 .explore-cards-container {
@@ -147,9 +134,10 @@ body::-webkit-scrollbar {
 }
 
 .explore-card {
+    position: relative;
     width: 100%;
     height: 26vh;
-    background: white;
+    background: transparent;
 
     margin: 8.4vh 0;
 
@@ -158,6 +146,57 @@ body::-webkit-scrollbar {
 }
 .explore-card:first-child { margin-top: 0; }
 .explore-card:last-child { margin-bottom: 0; }
+
+.explore-card-title {
+    position: absolute;
+    width: 100%;
+
+    font-family: 'Montserrat', sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 2.5vw;
+}
+.title-card-left { text-align: left; }
+.title-card-right { text-align: right; }
+
+.btn-card {
+    position: absolute;
+    top: 3.5vw;
+}
+
+.btn-card-left { 
+    left: 0;
+    transform: translate(0, -50%);
+}
+
+.btn-card-right { 
+    left: 100%;
+    transform: translate(-100%, -50%);
+}
+
+.explore-card-text {
+    position: absolute;
+    width: 49.5vw;
+
+    top: 3.5vw;
+
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 1.6vw;
+}
+
+.text-card-left {
+    text-align: left;
+    left: 0;
+    transform: none;
+}
+
+.text-card-right {
+    text-align: right;
+    left: 100%;
+    transform: translate(-100%, 0);
+}
 
 #footer {
     width: 100%;
@@ -198,7 +237,7 @@ body::-webkit-scrollbar {
     font-family: 'Montserrat', sans-serif;
     font-style: normal;
     font-weight: normal;
-    font-size: 1.25vw;
+    font-size: 1.2vw;
 
     text-align: right;
 
