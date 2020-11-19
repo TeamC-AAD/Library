@@ -61,7 +61,7 @@ def chart_data():
 
 @app.route('/chart_view_test')
 def run_TSP_tester():
-    solver, matrix = test_tsp('map5.txt')
+    solver, matrix = test_tsp('map7.txt')
     for curr_data in solver.solve():
         print(curr_data)
     return "Done with test"
@@ -95,7 +95,7 @@ def test_tsp(map):
         gene_size=len(scores),
         fitness_func=lambda a : tsp_fitness(a , scores),
         pop_cnt=600, # population size (number of individuals)
-        max_gen=300, # maximum number of generations
+        max_gen=270, # maximum number of generations
         mutation_ratio=0.4, # mutation rate to apply to the population
         selection_ratio=0.6, # percentage of the population to select for mating
         selection_type="stochastic",

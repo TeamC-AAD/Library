@@ -20,6 +20,8 @@
             </div>
         </div>
     </div>
+
+    <svg width="960" height="600"></svg>
     <!--suppress JSUnresolvedLibraryURL -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
     <!--suppress JSUnresolvedLibraryURL -->
@@ -27,7 +29,7 @@
     <!--suppress JSUnresolvedLibraryURL -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
     <!--D3.js -->
-    <script src="https://d3js.org/d3.v3.min.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
 
     <script>
         $(document).ready(function () {
@@ -83,7 +85,7 @@
             const source = new EventSource("/chart-data");
 
             source.onmessage = function (event) {
-                const data = JSON.parse(-event.data);
+                const data = JSON.parse(event.data);
                 // if (config.data.labels.length === 20) {
                 //     config.data.labels.shift();
                 //     config.data.datasets[0].data.shift();
@@ -92,6 +94,26 @@
                     console.log("Done with everything");
                     // draw graph
                     // data.best_ind
+                    const graph = {
+                        "nodes": [
+                            { "id": "1", "group": 1 },
+                            { "id": "2", "group": 2 },
+                            { "id": "4", "group": 3 },
+                            { "id": "8", "group": 4 },
+                            { "id": "16", "group": 5 },
+                        ],
+                        "links": [
+                            { "source": "1", "target": "2", "value": 1 },
+                            { "source": "2", "target": "4", "value": 1 },
+                            { "source": "4", "target": "8", "value": 1 },
+                            { "source": "4", "target": "8", "value": 1 },
+                            { "source": "8", "target": "16", "value": 1 },
+                            { "source": "16", "target": "1", "value": 1 }
+                        ]
+                    }
+                    console.log("graph is " + graph);
+
+                    generate_graph(data.graph, data.best_ind);
                 } else {
                     config.data.labels.push(data.iter);
                     config.data.datasets[0].data.push(data.fitness);
@@ -99,6 +121,163 @@
                 }
 
                 console.log(data.iter, data)
+            }
+
+            function generate_graph(matrix, path) {
+                var svg = d3.select("svg"),
+                    width = +svg.attr("width"),
+                    height = +svg.attr("height");
+
+                var simulation = d3.forceSimulation()
+                    .force("link", d3.forceLink().id(function (d) { return d.id; }))
+                    //.force("charge", d3.forceManyBody().strength(-200))
+                    .force('charge', d3.forceManyBody()
+                        .strength(-200)
+                        .theta(0.8)
+                        .distanceMax(150)
+                    )
+                    // 		.force('collide', d3.forceCollide()
+                    //       .radius(d => 40)
+                    //       .iterations(2)
+                    //     )
+                    .force("center", d3.forceCenter(width / 2, height / 2));
+                /*
+                const graph = {
+                    "nodes": [
+                        { "id": "1", "group": 1 },
+                        { "id": "2", "group": 2 },
+                        { "id": "4", "group": 3 },
+                        { "id": "8", "group": 4 },
+                        { "id": "16", "group": 5 },
+                    ],
+                    "links": [
+                        { "source": "1", "target": "2", "value": 1 },
+                        { "source": "2", "target": "4", "value": 1 },
+                        { "source": "4", "target": "8", "value": 1 },
+                        { "source": "4", "target": "8", "value": 1 },
+                        { "source": "8", "target": "16", "value": 1 },
+                        { "source": "16", "target": "1", "value": 1 }
+                    ]
+                }
+                */
+                const graph = {
+                };
+                graph["nodes"] = [];
+                
+                const nodes = path;
+                nodes.sort((a,b)=>a-b);
+
+                console.log("Inside generate_graph:");
+                console.log(path);
+                console.log(matrix);
+
+                for (var i in nodes) {
+                    let dest = parseInt(i)+1;
+                    console.log(dest);
+                    graph["nodes"].push({id: dest.toString(), group: "1"});
+                }
+
+                let links = [];
+                nodes.forEach(function (d, i) {
+                    // console.log('parent: ' + d, i);
+                    matrix[i].forEach(function (e, j) {
+                        console.log(i, j)
+                        if (matrix[i][j] > 0) {
+                            links.push({ source: (i+1).toString(), target: (j+1).toString(), value: matrix[i][j] });
+                        }
+                    });
+                });
+
+                graph["links"] = links;
+
+                console.log(graph);
+
+
+
+                function run(graph) {
+
+                    graph.links.forEach(function (d) {
+                        //     d.source = d.source_id;    
+                        //     d.target = d.target_id;
+                    });
+
+                    var link = svg.append("g")
+                        .style("stroke", "#aaa")
+                        .selectAll("line")
+                        .data(graph.links)
+                        .enter().append("line");
+
+                    var node = svg.append("g")
+                        .attr("class", "nodes")
+                        .selectAll("circle")
+                        .data(graph.nodes)
+                        .enter().append("circle")
+                        .attr("r", 2)
+                        .call(d3.drag()
+                            .on("start", dragstarted)
+                            .on("drag", dragged)
+                            .on("end", dragended));;
+
+                    var label = svg.append("g")
+                        .attr("class", "labels")
+                        .selectAll("text")
+                        .data(graph.nodes)
+                        .enter().append("text")
+                        .attr("class", "label")
+                        .text(function (d) { return d.id; });
+
+                    simulation
+                        .nodes(graph.nodes)
+                        .on("tick", ticked);
+
+                    simulation.force("link")
+                        .links(graph.links);
+
+                    function ticked() {
+                        link
+                            .attr("x1", function (d) { return d.source.x; })
+                            .attr("y1", function (d) { return d.source.y; })
+                            .attr("x2", function (d) { return d.target.x; })
+                            .attr("y2", function (d) { return d.target.y; });
+
+                        node
+                            .attr("r", 16)
+                            .style("fill", "#efefef")
+                            .style("stroke", "#424242")
+                            .style("stroke-width", "1px")
+                            .attr("cx", function (d) { return d.x + 5; })
+                            .attr("cy", function (d) { return d.y - 3; });
+
+                        label
+                            .attr("x", function (d) { return d.x; })
+                            .attr("y", function (d) { return d.y; })
+                            .style("font-size", "10px").style("fill", "#333");
+                    }
+
+                    function dragstarted(d) {
+                        if (!d3.event.active) simulation.alphaTarget(0.3).restart()
+                        d.fx = d.x
+                        d.fy = d.y
+                        //  simulation.fix(d);
+                    }
+
+                    function dragged(d) {
+                        d.fx = d3.event.x
+                        d.fy = d3.event.y
+                        //  simulation.fix(d, d3.event.x, d3.event.y);
+                    }
+
+                    function dragended(d) {
+                        d.fx = d3.event.x
+                        d.fy = d3.event.y
+                        if (!d3.event.active) simulation.alphaTarget(0);
+                        //simulation.unfix(d);
+                    }
+                }
+
+                console.log("Running graph");
+                run(graph);
+
             }
 
 
@@ -126,54 +305,114 @@
             console.log(nodes);
             console.log(links);
 
-            var width = 640, height = 480;
 
-            var svg = d3.select("body").append("svg")
-                .attr("width", width)
-                .attr("height", height);
 
-            var force = d3.layout.force() //Here we specify the paramaters
-                .size([width, height])
-                .nodes(d3.values(nodes)) //this is where we pass the nodes of our dataset
-                .links(links) // source of links
-                .on("tick", tick) //on click of the nodes
-                .linkDistance(300) //How far apart the nodes are
-                .start(); //Start to render
 
-            //add link and nodes
-            var link = svg.selectAll(".link")
-                .data(links) //get the data
-                .enter().append('line') //binds the data in the links array to the svg 
-                .attr("class", "link") //css styling
 
-            var node = svg.selectAll(".node")
-                .data(force.nodes()) //way to reference the nodes in the force layout
-                .enter().append("g");
 
-            node.append("circle")
-                .attr("class", "node")
-                .attr("r", width * 0.03); //radius of the circle
-
-            function tick(e) {
-                node.attr("transform", function (d) {
-                    return "translate(" + [d.x, d.y] + ")"
-                })
-                    .call(force.drag); //the relative location will activate a drag once the node is clicked
-
-                link.attr("x1", function (d) {
-                    return d.source.x;
-                })
-                    .attr("y1", function (d) {
-                        return d.source.y;
-                    })
-                    .attr("x2", function (d) {
-                        return d.target.x;
-                    })
-                    .attr("y2", function (d) {
-                        return d.target.y;
-                    })
+            const graph = {
+                "nodes": [
+                    { "id": "1", "group": 1 },
+                    { "id": "2", "group": 2 },
+                    { "id": "4", "group": 3 },
+                    { "id": "8", "group": 4 },
+                    { "id": "16", "group": 5 },
+                ],
+                "links": [
+                    { "source": "1", "target": "2", "value": 1 },
+                    { "source": "2", "target": "4", "value": 1 },
+                    { "source": "4", "target": "8", "value": 1 },
+                    { "source": "4", "target": "8", "value": 1 },
+                    { "source": "8", "target": "16", "value": 1 },
+                    { "source": "16", "target": "1", "value": 1 }
+                ]
             }
+            console.log(graph);
 
+            /*
+                                    function run(graph) {
+                        
+                                        graph.links.forEach(function (d) {
+                                            //     d.source = d.source_id;    
+                                            //     d.target = d.target_id;
+                                        });
+                        
+                                        var link = svg.append("g")
+                                            .style("stroke", "#aaa")
+                                            .selectAll("line")
+                                            .data(graph.links)
+                                            .enter().append("line");
+                        
+                                        var node = svg.append("g")
+                                            .attr("class", "nodes")
+                                            .selectAll("circle")
+                                            .data(graph.nodes)
+                                            .enter().append("circle")
+                                            .attr("r", 2)
+                                            .call(d3.drag()
+                                                .on("start", dragstarted)
+                                                .on("drag", dragged)
+                                                .on("end", dragended));;
+                        
+                                        var label = svg.append("g")
+                                            .attr("class", "labels")
+                                            .selectAll("text")
+                                            .data(graph.nodes)
+                                            .enter().append("text")
+                                            .attr("class", "label")
+                                            .text(function (d) { return d.id; });
+                        
+                                        simulation
+                                            .nodes(graph.nodes)
+                                            .on("tick", ticked);
+                        
+                                        simulation.force("link")
+                                            .links(graph.links);
+                        
+                                        function ticked() {
+                                            link
+                                                .attr("x1", function (d) { return d.source.x; })
+                                                .attr("y1", function (d) { return d.source.y; })
+                                                .attr("x2", function (d) { return d.target.x; })
+                                                .attr("y2", function (d) { return d.target.y; });
+                        
+                                            node
+                                                .attr("r", 16)
+                                                .style("fill", "#efefef")
+                                                .style("stroke", "#424242")
+                                                .style("stroke-width", "1px")
+                                                .attr("cx", function (d) { return d.x + 5; })
+                                                .attr("cy", function (d) { return d.y - 3; });
+                        
+                                            label
+                                                .attr("x", function (d) { return d.x; })
+                                                .attr("y", function (d) { return d.y; })
+                                                .style("font-size", "10px").style("fill", "#333");
+                                        }
+                        
+                                        function dragstarted(d) {
+                                            if (!d3.event.active) simulation.alphaTarget(0.3).restart()
+                                            d.fx = d.x
+                                            d.fy = d.y
+                                            //  simulation.fix(d);
+                                        }
+                        
+                                        function dragged(d) {
+                                            d.fx = d3.event.x
+                                            d.fy = d3.event.y
+                                            //  simulation.fix(d, d3.event.x, d3.event.y);
+                                        }
+                        
+                                        function dragended(d) {
+                                            d.fx = d3.event.x
+                                            d.fy = d3.event.y
+                                            if (!d3.event.active) simulation.alphaTarget(0);
+                                            //simulation.unfix(d);
+                                        }
+                                    }
+                                    */
+
+            // run(graph);
         });
     </script>
 </body>
