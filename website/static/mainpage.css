@@ -9,6 +9,8 @@ html, body {
     scroll-behavior: smooth;
 }
 
+html { background-color: white; }
+
 body {
     background: linear-gradient(252.44deg, rgba(86, 128, 233, 0.75) 50.52%, rgba(136, 96, 208, 0.75) 100%), 
                 linear-gradient(20deg, rgba(132, 206, 235, 0.8) 0%, rgba(90, 137, 234, 0.8) 100%);
@@ -17,6 +19,17 @@ body {
 
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
+
+    clip-path: circle(2%);
+
+    transition: clip-path 2s ease-out;
+
+    animation: loader 1s alternate infinite;
+}
+
+@keyframes loader {
+    from {transform: translateY(-5%);}
+    to {transform: translateY(5%);}
 }
 
 body::-webkit-scrollbar {

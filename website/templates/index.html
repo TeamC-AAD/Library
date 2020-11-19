@@ -29,6 +29,12 @@
 
 {% block scripts %}
     <script>
+        document.onreadystatechange = () => {
+            if (document.readyState == "complete") {
+                document.body.style.clipPath = "none";
+            }
+        }
+
         window.onscroll = function() {scrollHandler()};
 
         function scrollHandler() {
