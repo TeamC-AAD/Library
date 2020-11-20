@@ -1,1 +1,64 @@
 {% extends "base.html" %}
+
+{% block head %}
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='report.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="loader-container">
+    <div class="spring">
+        <span class="bubble bubble1"></span>
+        <span class="bubble bubble2"></span>
+        <span class="bubble bubble3"></span>
+        <span class="bubble bubble4"></span>
+        <span class="bubble bubble5"></span>
+    </div>
+</div>
+<textarea>
+
+# Euler's Identity
+
+In mathematics, **Euler's identity** is the equality
+$$ e^{i \pi} + 1 = 0. $$
+
+<script src="https://gist.github.com/ArenaGrenade/2561d15331920e0836b2d6cef29921af.js?helloworld.js"></script>
+
+## Explanation
+
+Euler's identity is a special case of Euler's formula from complex
+analysis, which states that for any real number $ x $,
+$$ e^{ix} = \cos x + i \sin x. $$
+
+</textarea>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        window.texme = {
+            style: "plain",
+            onRenderPage: () => {
+                document.getElementsByClassName("loader-container")[0].style.display = 'none';
+            },
+        }
+    </script>
+    <script src="https://unpkg.com/texme"></script>
+    <script>
+        window.onscroll = function() {scrollHandler()};
+
+        function scrollHandler() {
+            let scroll = document.documentElement.scrollTop;
+            let base_func = 1 - (1 / (1 + Math.exp(scroll / 1000)) * 2); /* Range would be from 0 to 1 */
+
+            let startA = 252.44;
+            let startB = 20;
+
+            let rangeA = 240;
+            let rangeB = 220;
+
+            let valueA = (base_func * rangeA + startA) % 360;
+            let valueB = (base_func * rangeB + startB) % 360;
+
+            document.body.style.backgroundImage = "linear-gradient(" + valueA + "deg, rgba(86, 128, 233, 0.75) 50.52%, rgba(136, 96, 208, 0.75) 100%), " + "linear-gradient(" + valueB + "deg, rgba(132, 206, 235, 0.8) 0%, rgba(90, 137, 234, 0.8) 100%)";
+        }
+    </script>
+{% endblock %}

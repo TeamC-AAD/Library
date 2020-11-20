@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
+{% block head %}
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='mainpage.css') }}">
+{% endblock %}
+
 {% block content %}
     <div class="landing-container">
         <div class="main-title">GeneAl : The Genetic Algorithm Library</div>
@@ -37,7 +41,7 @@
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit ut aliquam, purus sit amet luctus venenatis, 
                     lectus magna fringilla vel fringilla est ullamcorper eget nulla facilisi etiam dignissim diam quis
                 </div>
-                <button class="btn btn-card btn-card-right"><span>Read it</span></button>
+                <button class="btn btn-card btn-card-right" onclick="location.href='/report';"><span>Read it</span></button>
             </div>
         </div>
     </div>

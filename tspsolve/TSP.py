@@ -8,6 +8,7 @@ from geneticalg.core.AbstractSolver import AbstractSolver
 import pandas as pd
 
 
+
 class TSPSolver(AbstractSolver):
     def __init__(
         self,
