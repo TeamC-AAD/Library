@@ -2,6 +2,16 @@
 
 ## Table of contents
 
+* [Introduction](#Introduction)
+* [Installation](#Installation)
+* [Usage](#Usage)
+* [Genetic Algorithms](#Genetic-Algorithms)
+  * [Selection](#Selection)
+  * [Crossover](#Crossover)
+  * [Mutation](#Mutation)
+* [Additional Features](#Additional-Features)
+* [Applications](#Applications)
+* [Creators](#Creators)
 
 ## Introduction
 
