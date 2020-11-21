@@ -14,8 +14,9 @@ from eqnsolve.EQN import solveqn
 
 app = Flask(__name__)
 map_str = "map1.txt"
-weights = np.array([[2, 3], [3, -5]])
-outputs = np.array([4, 7])
+
+powers = np.array([5, 3, 1])
+weights = np.array([2, 3, 10])
 
 @app.route('/')
 def mainpage():
@@ -27,22 +28,24 @@ def reportpage():
 
 @app.route('/eqnsolve', methods=['GET', 'POST'])
 def eqnsolve():
-    global weights
-    global outputs
-    n_eq = random.randint(2, 6)
-    n_eq = 2
-    weights = np.random.randint(low=0, high=20, size=(n_eq, n_eq))
-    outputs = np.random.randint(low=10, high=50, size=n_eq)
+    global powers
+    global weights 
+
+    # Number of non-zero coefficients
+    n_powers = random.randint(2, 6)
+    # choose powers
+    powers = np.random.choice(np.arange(0, 101), replace=False, size=n_powers)
+    # coefficients for each term
+    weights = np.random.uniform(5, 10, n_powers)
     
+    print("powers: ")
+    print(powers)
     print("weights: ")
     print(weights)
-    print("outputs: ")
-    print(outputs)
 
-    return render_template('eqnsolve.html')
-    # solveqn(weights, outputs)
-    solveqn(weights, outputs)
-    return f"{weights}, {outputs}"
+    # return render_template('eqnsolve.html')
+    list(solveqn(powers, weights))
+    return f"{powers}, {weights}"
 
 
 @app.route('/tsp', methods=['GET', 'POST'])
