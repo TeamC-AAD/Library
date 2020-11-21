@@ -35,7 +35,7 @@ def eqnsolve():
     # Number of non-zero coefficients
     n_powers = random.randint(20, 30)
     # choose powers
-    powers = np.random.choice(np.arange(0, 120), replace=False, size=n_powers)
+    powers = np.random.choice(np.arange(-50, 50), replace=False, size=n_powers)
     # coefficients for each term
     weights = np.random.uniform(-100, 100, n_powers)
 
