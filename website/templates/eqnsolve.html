@@ -82,7 +82,7 @@
 
             const lineChart = new Chart(context, config);
 
-            const source = new EventSource("/chart-data");
+            const source = new EventSource("/eqn-chart-data");
 
             source.onmessage = function (event) {
                 const data = JSON.parse(event.data);
@@ -106,6 +106,7 @@
                 }
                 console.log(data.iter, data)
             }
+        });
 
     </script>
 </body>

@@ -10,7 +10,7 @@ import time
 import sys
 sys.path.append("..")
 from tspsolve.TSP import TSPSolver, tsp_fitness
-from eqnsolve.EQN import solveqn
+from eqnsolve.EQN import solveqn, value
 
 app = Flask(__name__)
 map_str = "map1.txt"
@@ -32,11 +32,11 @@ def eqnsolve():
     global weights 
 
     # Number of non-zero coefficients
-    n_powers = random.randint(2, 6)
+    n_powers = random.randint(20, 30)
     # choose powers
-    powers = np.random.choice(np.arange(0, 101), replace=False, size=n_powers)
+    powers = np.random.choice(np.arange(0, 120), replace=False, size=n_powers)
     # coefficients for each term
-    weights = np.random.uniform(5, 10, n_powers)
+    weights = np.random.uniform(-100, 100, n_powers)
     
     print("powers: ")
     print(powers)
@@ -44,8 +44,45 @@ def eqnsolve():
     print(weights)
 
     # return render_template('eqnsolve.html')
-    list(solveqn(powers, weights))
-    return f"{powers}, {weights}"
+    # list(solveqn(powers, weights))
+    return render_template('eqnsolve.html')
+
+@app.route('/eqn-chart-data')
+def eqn_chart_data():
+    global powers
+    global weights
+    print("Called")
+    solver = solveqn(powers, weights)
+    def generate_data(solver):
+        best_ind = []
+        for curr_data in solver.solve():
+            print(curr_data)
+            best_ind = curr_data['best_ind']
+            curr = {
+                'iter': curr_data['iter'],
+                'fitness': curr_data['fitness'],
+                'best_ind': best_ind.tolist(),
+            }
+
+            print(curr['iter'], curr['best_ind'], value(curr_data['best_ind'], powers, weights))
+
+            json_data = json.dumps(curr)
+            yield f"data:{json_data}\n\n"
+        
+
+        # Done here, generate fake data
+        done_signal = {
+            'iter': -1,
+            'best_ind': best_ind.tolist(),
+        }
+
+        json_data = json.dumps(done_signal)
+        yield f"data:{json_data}\n\n"
+
+        return None
+    
+    return Response(generate_data(solver), mimetype='text/event-stream')
+
 
 
 @app.route('/tsp', methods=['GET', 'POST'])
