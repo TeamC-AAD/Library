@@ -10,7 +10,7 @@ weights = np.array([[2, 3], [3, -5]])
 outputs = np.array([4, 7])
 
 
-def eqnfit(chromosome):
+def eqnfit(chromosome, weights, outputs):
     '''
     Equation 1:
     '''
@@ -26,5 +26,5 @@ def eqnfit(chromosome):
 
 
 
-def value(chromosome):
+def value(chromosome, weights):
     return np.dot(weights, np.array(chromosome))

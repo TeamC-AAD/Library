@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Creating Real-Time Charts with Flask</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <canvas id="canvas"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <svg width="1060" height="900"></svg>
+    <!--suppress JSUnresolvedLibraryURL -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <!--suppress JSUnresolvedLibraryURL -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <!--suppress JSUnresolvedLibraryURL -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
+    <!--D3.js -->
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            const config = {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: "Fitness",
+                        backgroundColor: 'rgb(255, 99, 132)',
+                        borderColor: 'rgb(255, 99, 132)',
+                        data: [],
+                        fill: false,
+                    }],
+                },
+                options: {
+                    responsive: true,
+                    title: {
+                        display: true,
+                        text: 'Solving TSP using genetic algorithms'
+                    },
+                    tooltips: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    hover: {
+                        mode: 'nearest',
+                        intersect: true
+                    },
+                    scales: {
+                        xAxes: [{
+                            display: true,
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'iter'
+                            }
+                        }],
+                        yAxes: [{
+                            display: true,
+                            scaleLabel: {
+                                display: true,
+                                labelString: 'fitness'
+                            }
+                        }]
+                    }
+                }
+            };
+
+            const context = document.getElementById('canvas').getContext('2d');
+
+            const lineChart = new Chart(context, config);
+
+            const source = new EventSource("/chart-data");
+
+            source.onmessage = function (event) {
+                const data = JSON.parse(event.data);
+                // if (config.data.labels.length === 20) {
+                //     config.data.labels.shift();
+                //     config.data.datasets[0].data.shift();
+                // }
+
+                // Push the data points to the fitness curve
+                config.data.labels.push(data.iter);
+                config.data.datasets[0].data.push(data.fitness);
+                lineChart.update();
+
+                // Re-draw the graph in d3
+                console.log("Delete all the points in the graph");
+                d3.select("svg").selectAll("*").remove();
+                // draw graph
+                // data.best_ind
+                const graph = {
+                    "nodes": [
+                        { "id": "1", "group": 1 },
+                        { "id": "2", "group": 2 },
+                        { "id": "4", "group": 3 },
+                        { "id": "8", "group": 4 },
+                        { "id": "16", "group": 5 },
+                    ],
+                    "links": [
+                        { "source": "1", "target": "2", "value": 1 },
+                        { "source": "2", "target": "4", "value": 1 },
+                        { "source": "4", "target": "8", "value": 1 },
+                        { "source": "4", "target": "8", "value": 1 },
+                        { "source": "8", "target": "16", "value": 1 },
+                        { "source": "16", "target": "1", "value": 1 }
+                    ]
+                }
+                console.log("data best individual is ");
+                console.log(data.best_ind);
+
+                if (data.iter == -1) {
+                    generate_graph(data.graph, data.best_ind);
+                    source.close();
+                }
+                console.log(data.iter, data)
+            }
+
+            function generate_graph(matrix, path) {
+                var svg = d3.select("svg"),
+                    width = +svg.attr("width"),
+                    height = +svg.attr("height");
+
+                var simulation = d3.forceSimulation()
+                    .force("link", d3.forceLink().id(function (d) { return d.id; }))
+                    //.force("charge", d3.forceManyBody().strength(-200))
+                    .force('charge', d3.forceManyBody()
+                        .strength(-1800)
+                        // .theta(0.8)
+                        // .distanceMax(1150) 
+                        // .distanceMin(50)
+                    )
+                    .force('collide', d3.forceCollide(function(d) {
+                        return d.value 
+                    }))
+                    // 		.force('collide', d3.forceCollide()
+                    //       .radius(d => 40)
+                    //       .iterations(2)
+                    //     )
+                    .force("center", d3.forceCenter(width / 2, height / 2));
+                
+                const graph = {
+                };
+                graph["nodes"] = [];
+                
+                const nodes = [];
+                for (var temp_var in path) {
+                    nodes.push(temp_var);
+                }
+                nodes.sort((a,b)=>a-b);
+
+                console.log("Inside generate_graph:");
+                console.log(path);
+                console.log(matrix);
+
+                for (var i in nodes) {
+                    let dest = parseInt(i)+1;
+                    console.log(dest);
+                    graph["nodes"].push({id: dest.toString(), type: "1"});
+                }
+
+                path.push(path[0]);
+                let links = [];
+                nodes.forEach(function (d, i) {
+                    // console.log('parent: ' + d, i);
+                    matrix[i].forEach(function (e, j) {
+                        console.log(i, j)
+                        let curr_type = "a";
+                        for (var k = 0; k < path.length - 1; k++) {
+                            console.log("looking at " + path[k].toString());
+                            if ((path[k] == i+1 && path[k+1] == j+1) ||
+                                (path[k] == j+1 && path[k+1] == i+1)) {
+                                    console.log("in path for ");
+                                    console.log(path[k], path[k+1]);
+                                    console.log(i, j);
+                                    curr_type = "b";
+                            }
+                        }
+                        // console.log("has " + curr_type.toString());
+                        if (matrix[i][j] > 0) {
+                            links.push({
+                                source: (i+1).toString(), 
+                                target: (j+1).toString(),
+                                value: matrix[i][j],
+                                type: curr_type
+                            });
+                        }
+                    });
+                });
+
+                console.log("links is ");
+                console.log(links);
+
+                graph["links"] = links;
+
+                console.log(graph);
+
+
+
+                function run(graph) {
+
+                    graph.links.forEach(function (d) {
+                        //     d.source = d.source_id;    
+                        //     d.target = d.target_id;
+                    });
+
+                    var link = svg.append("g")
+                        .selectAll("line")
+                        .data(graph.links)
+                        .enter()
+                        .append("line")
+                        .style("stroke", function(d) {
+                            console.log(d);
+                            if (d.type == "a") {
+                                return "rgba(120, 120, 120, 0.3)";
+                            } else {
+                                return "#FF0000";
+                            }
+                        });
+
+                    var node = svg.append("g")
+                        .attr("class", "nodes")
+                        .selectAll("circle")
+                        .data(graph.nodes)
+                        .enter().append("circle")
+                        .attr("r", 8)
+                        .call(d3.drag()
+                            .on("start", dragstarted)
+                            .on("drag", dragged)
+                            .on("end", dragended));;
+
+                    var label = svg.append("g")
+                        .attr("class", "labels")
+                        .selectAll("text")
+                        .data(graph.nodes)
+                        .enter().append("text")
+                        .attr("class", "label")
+                        .text(function (d) { return d.id; });
+
+                    simulation
+                        .nodes(graph.nodes)
+                        .on("tick", ticked);
+
+                    simulation.force("link")
+                        .links(graph.links);
+
+                    function ticked() {
+                        link
+                            .attr("x1", function (d) { return d.source.x; })
+                            .attr("y1", function (d) { return d.source.y; })
+                            .attr("x2", function (d) { return d.target.x; })
+                            .attr("y2", function (d) { return d.target.y; });
+
+                        node
+                            .attr("r", 16)
+                            .style("fill", "#efefef")
+                            .style("stroke", "#424242")
+                            .style("stroke-width", "1px")
+                            .attr("cx", function (d) { return d.x + 5; })
+                            .attr("cy", function (d) { return d.y - 3; });
+
+                        label
+                            .attr("x", function (d) { return d.x; })
+                            .attr("y", function (d) { return d.y; })
+                            .style("font-size", "10px").style("fill", "#333");
+                    }
+
+                    function dragstarted(d) {
+                        if (!d3.event.active) simulation.alphaTarget(0.3).restart()
+                        d.fx = d.x
+                        d.fy = d.y
+                        //  simulation.fix(d);
+                    }
+
+                    function dragged(d) {
+                        d.fx = d3.event.x
+                        d.fy = d3.event.y
+                        //  simulation.fix(d, d3.event.x, d3.event.y);
+                    }
+
+                    function dragended(d) {
+                        d.fx = d3.event.x
+                        d.fy = d3.event.y
+                        if (!d3.event.active) simulation.alphaTarget(0);
+                        //simulation.unfix(d);
+                    }
+                }
+
+                console.log("Running graph");
+                run(graph);
+
+            }
+
+
+
+            // Test d3.js
+
+            let nodes = [1, 2, 3];
+            let matrix = [
+                [2, 0, 1],
+                [2, 4, 0],
+                [1, 2, 5]
+            ];
+
+            let links = [];
+            nodes.forEach(function (d, i) {
+                console.log('parent: ' + d, i);
+                matrix[i].forEach(function (e, j) {
+                    console.log(i, j)
+                    if (matrix[i][j] > 0) {
+                        links.push({ source: i, target: j });
+                    }
+                });
+            });
+
+            console.log(nodes);
+            console.log(links);
+
+
+
+
+
+
+            const graph = {
+                "nodes": [
+                    { "id": "1", "group": 1 },
+                    { "id": "2", "group": 2 },
+                    { "id": "4", "group": 3 },
+                    { "id": "8", "group": 4 },
+                    { "id": "16", "group": 5 },
+                ],
+                "links": [
+                    { "source": "1", "target": "2", "value": 1 },
+                    { "source": "2", "target": "4", "value": 1 },
+                    { "source": "4", "target": "8", "value": 1 },
+                    { "source": "4", "target": "8", "value": 1 },
+                    { "source": "8", "target": "16", "value": 1 },
+                    { "source": "16", "target": "1", "value": 1 }
+                ]
+            }
+            console.log(graph);
+
+            /*
+                                    function run(graph) {
+                        
+                                        graph.links.forEach(function (d) {
+                                            //     d.source = d.source_id;    
+                                            //     d.target = d.target_id;
+                                        });
+                        
+                                        var link = svg.append("g")
+                                            .style("stroke", "#aaa")
+                                            .selectAll("line")
+                                            .data(graph.links)
+                                            .enter().append("line");
+                        
+                                        var node = svg.append("g")
+                                            .attr("class", "nodes")
+                                            .selectAll("circle")
+                                            .data(graph.nodes)
+                                            .enter().append("circle")
+                                            .attr("r", 2)
+                                            .call(d3.drag()
+                                                .on("start", dragstarted)
+                                                .on("drag", dragged)
+                                                .on("end", dragended));;
+                        
+                                        var label = svg.append("g")
+                                            .attr("class", "labels")
+                                            .selectAll("text")
+                                            .data(graph.nodes)
+                                            .enter().append("text")
+                                            .attr("class", "label")
+                                            .text(function (d) { return d.id; });
+                        
+                                        simulation
+                                            .nodes(graph.nodes)
+                                            .on("tick", ticked);
+                        
+                                        simulation.force("link")
+                                            .links(graph.links);
+                        
+                                        function ticked() {
+                                            link
+                                                .attr("x1", function (d) { return d.source.x; })
+                                                .attr("y1", function (d) { return d.source.y; })
+                                                .attr("x2", function (d) { return d.target.x; })
+                                                .attr("y2", function (d) { return d.target.y; });
+                        
+                                            node
+                                                .attr("r", 16)
+                                                .style("fill", "#efefef")
+                                                .style("stroke", "#424242")
+                                                .style("stroke-width", "1px")
+                                                .attr("cx", function (d) { return d.x + 5; })
+                                                .attr("cy", function (d) { return d.y - 3; });
+                        
+                                            label
+                                                .attr("x", function (d) { return d.x; })
+                                                .attr("y", function (d) { return d.y; })
+                                                .style("font-size", "10px").style("fill", "#333");
+                                        }
+                        
+                                        function dragstarted(d) {
+                                            if (!d3.event.active) simulation.alphaTarget(0.3).restart()
+                                            d.fx = d.x
+                                            d.fy = d.y
+                                            //  simulation.fix(d);
+                                        }
+                        
+                                        function dragged(d) {
+                                            d.fx = d3.event.x
+                                            d.fy = d3.event.y
+                                            //  simulation.fix(d, d3.event.x, d3.event.y);
+                                        }
+                        
+                                        function dragended(d) {
+                                            d.fx = d3.event.x
+                                            d.fy = d3.event.y
+                                            if (!d3.event.active) simulation.alphaTarget(0);
+                                            //simulation.unfix(d);
+                                        }
+                                    }
+                                    */
+
+            // run(graph);
+        });
+    </script>
+</body>
+
+</html>

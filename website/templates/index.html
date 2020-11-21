@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block head %}
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='mainpage.css') }}">
+{% endblock %}
+
+{% block content %}
+    <div class="landing-container">
+        <div class="main-title">GeneAl : The Genetic Algorithm Library</div>
+        <div class="button-container">
+            <button id="explore-button" class="btn btn-landing" onclick="document.getElementById('explore-section').scrollIntoView(true);">
+                <i class="fas fa-compass"></i><span>Explore</span>
+            </button>
+            <button id="github-button" class="btn btn-landing" onclick="location.href='https://github.com/TeamC-AAD/Library';">
+                <i class="fab fa-github"></i><span>Github</span>
+            </button>
+        </div>
+    </div>
+    <div class="explore-container" id="explore-section">
+        <h1 id="explore-title">Explore</h1>
+        <div class="explore-cards-container">
+            <div class="explore-card" id="tsp-solve">
+                <div class="explore-card-title title-card-left">Solving the Travelling Salesman Problem</div>
+                <div class="explore-card-text text-card-left">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit ut aliquam, purus sit amet luctus venenatis, 
+                    lectus magna fringilla vel fringilla est ullamcorper eget nulla facilisi etiam dignissim diam quis
+                </div>
+                <button class="btn btn-card btn-card-right"><span>Try it</span></button>
+            </div>
+            <div class="explore-card" id="eq-solve">
+                <div class="explore-card-title title-card-right">System of Linear Equations Solver</div>
+                <div class="explore-card-text text-card-right">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit ut aliquam, purus sit amet luctus venenatis, 
+                    lectus magna fringilla vel fringilla est ullamcorper eget nulla facilisi etiam dignissim diam quis
+                </div>
+                <button class="btn btn-card btn-card-left"><span>Try it</span></button>
+            </div>
+            <div class="explore-card" id="ml-report">
+                <div class="explore-card-title title-card-left">Report on using GA in Machine Learning</div>
+                <div class="explore-card-text text-card-left">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit ut aliquam, purus sit amet luctus venenatis, 
+                    lectus magna fringilla vel fringilla est ullamcorper eget nulla facilisi etiam dignissim diam quis
+                </div>
+                <button class="btn btn-card btn-card-right" onclick="location.href='/report';"><span>Read it</span></button>
+            </div>
+        </div>
+    </div>
+    <div id="footer"></div>
+    <div class="group-bar">
+        <span class="group-bar-text">Created By Team-C</span>
+        <div class="group-bar-line"></div>
+    </div>
+    <div class="line-container" id="top-line"></div>
+    <div class="line-container" id="mid-line"></div>
+    <div class="line-container" id="bot-line"></div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        window.onscroll = function() {scrollHandler()};
+
+        function scrollHandler() {
+            let scroll = document.documentElement.scrollTop;
+            let base_func = 1 - (1 / (1 + Math.exp(scroll / 1000)) * 2); /* Range would be from 0 to 1 */
+
+            let startA = 252.44;
+            let startB = 20;
+
+            let rangeA = 240;
+            let rangeB = 220;
+
+            let valueA = (base_func * rangeA + startA) % 360;
+            let valueB = (base_func * rangeB + startB) % 360;
+
+            document.body.style.backgroundImage = "linear-gradient(" + valueA + "deg, rgba(86, 128, 233, 0.75) 50.52%, rgba(136, 96, 208, 0.75) 100%), " + "linear-gradient(" + valueB + "deg, rgba(132, 206, 235, 0.8) 0%, rgba(90, 137, 234, 0.8) 100%)";
+        }
+    </script>
+{% endblock %}
