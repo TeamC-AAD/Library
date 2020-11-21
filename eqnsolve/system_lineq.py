@@ -15,7 +15,11 @@ def eqnfit(chromosome, weights, outputs):
     Equation 1:
     '''
 
+    print(weights.shape)
+    print(outputs.shape)
+
     output_model = np.dot(weights, np.array(chromosome))
+    print(output_model)
 
     error = np.sum(np.power(output_model - outputs, 2))
 

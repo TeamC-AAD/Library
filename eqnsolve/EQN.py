@@ -9,23 +9,18 @@ from abc import ABCMeta, abstractmethod
 import sys
 sys.path.append("..")
 from geneticalg.core.ContinuousSolver import ContinuousGenAlgSolver
-from eqnsolve.system_lineq import eqnfit, value
-import pandas as pd
 
-var = 2
+# 2*x^5 + 3*x^3 + 10x = 14
 
-n_eq = 3
-n_un = 2
+powers = np.array([5, 3, 1])
+weights = np.array([2, 3, 10])
+val = 14
 
-weights = np.array([[2, 3], [3, -5]])
-outputs = np.array([4, 7])
+def solveqn(powers=powers, weights=weights, val=val, var=1):
 
-
-def solveqn(weights=weights, outputs=outputs):
-    var = len(outputs)
     solver = ContinuousGenAlgSolver(
         gene_size=var,
-        fitness_func=lambda chromosome: eqnfit(chromosome, weights, outputs),
+        fitness_func=lambda chromosome: eqnfit(chromosome, powers, weights, val),
         pop_cnt=4000, # population size (number of individuals)
         max_gen=200, # maximum number of generations
         mutation_ratio=0.4, # mutation rate to apply to the population
@@ -36,6 +31,20 @@ def solveqn(weights=weights, outputs=outputs):
         verbose=True
     )
     for curr_data in solver.solve(): 
-        print(curr_data ,"    ", value(curr_data["best_ind"], weights))
+        print(curr_data ,"    ", value(curr_data["best_ind"], powers, weights, val))
         yield curr_data
     return
+
+def value(chromosome, powers, weights, val):
+    return np.dot(weights, chromosome ** powers)
+
+def eqnfit(chromosome, powers, weights, val):
+    output = np.dot(weights, chromosome ** powers)
+    error = output - val
+    if error == 0:
+        return 1
+    return error
+
+list(solveqn())
+
+# 2x^5 + 3x^3 + 10x
