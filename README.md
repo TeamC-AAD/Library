@@ -1,5 +1,9 @@
 # Genesis
 
+[![PyPI version](https://badge.fury.io/py/pypi.svg)](https://badge.fury.io/py/pypi)
+[![Github All Releases](https://img.shields.io/github/downloads/nickinack/Library/total.svg)]()
+
+
 ## Table of contents
 
 * [Introduction](#Introduction)
