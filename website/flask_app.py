@@ -1,4 +1,4 @@
-from flask import Flask, Response, render_template, request
+from flask import Flask, Response, render_template, request, session
 # from TSP import TSPSolver, tsp_fitness
 import json
 import random
@@ -13,6 +13,7 @@ from tspsolve.TSP import TSPSolver, tsp_fitness
 from eqnsolve.EQN import solveqn, value
 
 app = Flask(__name__)
+app.secret_key = "TEST_KEY"
 map_str = "map1.txt"
 
 powers = np.array([5, 3, 1])
@@ -37,6 +38,10 @@ def eqnsolve():
     powers = np.random.choice(np.arange(0, 120), replace=False, size=n_powers)
     # coefficients for each term
     weights = np.random.uniform(-100, 100, n_powers)
+
+    session['powers'] = powers.tolist()
+    session['weights'] = weights.tolist()
+    
     
     print("powers: ")
     print(powers)
@@ -62,13 +67,13 @@ def eqn_chart_data():
                 'iter': curr_data['iter'],
                 'fitness': curr_data['fitness'],
                 'best_ind': best_ind.tolist(),
+                'value': value(curr_data['best_ind'], powers, weights)
             }
 
             print(curr['iter'], curr['best_ind'], value(curr_data['best_ind'], powers, weights))
 
             json_data = json.dumps(curr)
             yield f"data:{json_data}\n\n"
-        
 
         # Done here, generate fake data
         done_signal = {
