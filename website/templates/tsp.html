@@ -3,25 +3,39 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Creating Real-Time Charts with Flask</title>
+    <title>Solving TSP</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css" rel="stylesheet">
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='base.css') }}">
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='loader.css') }}">
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='mainpage.css') }}">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css">
+
+    <style>
+        .boxed {
+                /* border: 2px solid rgb(218, 148, 43) ; */
+                padding-top: 50px;
+                padding-bottom: 20px;
+            }
+    </style>
 </head>
 
 <body>
+    <h1 id="main_title"></h1>
     <div class="container">
         <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-body">
-                        <canvas id="canvas"></canvas>
-                    </div>
-                </div>
+            <div class="col-12 boxed"> 
+                <canvas id="canvas"></canvas>
             </div>
         </div>
     </div>
 
-    <svg width="1060" height="900"></svg>
+    <div>
+        <h2 id="graph_header"></h2>
+        <svg width="1060" height="900"></svg>
+    </div>
     <!--suppress JSUnresolvedLibraryURL -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
     <!--suppress JSUnresolvedLibraryURL -->
@@ -33,23 +47,32 @@
 
     <script>
         $(document).ready(function () {
+            Chart.defaults.global.defaultFontColor='white';
+
             const config = {
                 type: 'line',
                 data: {
                     labels: [],
                     datasets: [{
                         label: "Fitness",
-                        backgroundColor: 'rgb(255, 99, 132)',
-                        borderColor: 'rgb(255, 99, 132)',
+                        // backgroundColor: 'rgb(255, 99, 132)',
+                        borderColor: '#FCF300',
+                        fontColor: '#FFF',
                         data: [],
                         fill: false,
                     }],
                 },
                 options: {
                     responsive: true,
+                    legend: {
+                        labels: {
+                            fontColor: '#FFF'
+                        }
+                    },
                     title: {
                         display: true,
-                        text: 'Solving TSP using genetic algorithms'
+                        text: 'Solving TSP using genetic algorithms',
+                        fontColor: '#FFF'
                     },
                     tooltips: {
                         mode: 'index',
@@ -64,19 +87,29 @@
                             display: true,
                             scaleLabel: {
                                 display: true,
-                                labelString: 'iter'
+                                labelString: 'iter',
+                                fontColor: '#FFF'
+                            },
+                            gridLines: {
+                                color: "rgba(243, 241, 241, 0.46)"
                             }
                         }],
                         yAxes: [{
                             display: true,
                             scaleLabel: {
                                 display: true,
-                                labelString: 'fitness'
+                                labelString: 'fitness',
+                                fontColor: '#FFF'
+                            },
+                            gridLines: {
+                                color: "rgba(243, 241, 241, 0.46)"
                             }
                         }]
                     }
                 }
             };
+
+            let flag = true
 
             const context = document.getElementById('canvas').getContext('2d');
 
@@ -86,38 +119,25 @@
 
             source.onmessage = function (event) {
                 const data = JSON.parse(event.data);
-                // if (config.data.labels.length === 20) {
-                //     config.data.labels.shift();
-                //     config.data.datasets[0].data.shift();
-                // }
 
                 // Push the data points to the fitness curve
-                config.data.labels.push(data.iter);
-                config.data.datasets[0].data.push(data.fitness);
-                lineChart.update();
+                if (data.iter != -1) {
+                    config.data.labels.push(data.iter);
+                    config.data.datasets[0].data.push(data.fitness);
+                    lineChart.update();
+                }
+
+                if (flag === true) {
+                    $("#main_header").text("Solving for TSP having " + data.best_ind.length + " nodes");
+                    flag = false;
+                }
+
 
                 // Re-draw the graph in d3
                 console.log("Delete all the points in the graph");
                 d3.select("svg").selectAll("*").remove();
                 // draw graph
                 // data.best_ind
-                const graph = {
-                    "nodes": [
-                        { "id": "1", "group": 1 },
-                        { "id": "2", "group": 2 },
-                        { "id": "4", "group": 3 },
-                        { "id": "8", "group": 4 },
-                        { "id": "16", "group": 5 },
-                    ],
-                    "links": [
-                        { "source": "1", "target": "2", "value": 1 },
-                        { "source": "2", "target": "4", "value": 1 },
-                        { "source": "4", "target": "8", "value": 1 },
-                        { "source": "4", "target": "8", "value": 1 },
-                        { "source": "8", "target": "16", "value": 1 },
-                        { "source": "16", "target": "1", "value": 1 }
-                    ]
-                }
                 console.log("data best individual is ");
                 console.log(data.best_ind);
 
@@ -224,9 +244,9 @@
                         .style("stroke", function(d) {
                             console.log(d);
                             if (d.type == "a") {
-                                return "rgba(120, 120, 120, 0.3)";
+                                return "rgba(220, 220, 220, 0.2)";
                             } else {
-                                return "#FF0000";
+                                return "#FFF";
                             }
                         });
 
@@ -265,7 +285,7 @@
 
                         node
                             .attr("r", 16)
-                            .style("fill", "#efefef")
+                            .style("fill", "#d9f6ff")
                             .style("stroke", "#424242")
                             .style("stroke-width", "1px")
                             .attr("cx", function (d) { return d.x + 5; })

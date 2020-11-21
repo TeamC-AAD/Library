@@ -15,12 +15,13 @@ from geneticalg.core.ContinuousSolver import ContinuousGenAlgSolver
 
 powers = np.array([5, 3, 1])
 weights = np.array([2, 3, 10])
+val = 14
 
-def solveqn(powers=powers, weights=weights, var=1):
+def solveqn(powers=powers, weights=weights, val=val, var=1):
 
     solver = ContinuousGenAlgSolver(
         gene_size=var,
-        fitness_func=lambda chromosome: eqnfit(chromosome, powers, weights),
+        fitness_func=lambda chromosome: eqnfit(chromosome, powers, weights, val),
         pop_cnt=400, # population size (number of individuals)
         max_gen=200, # maximum number of generations
         mutation_ratio=0.4, # mutation rate to apply to the population
@@ -38,11 +39,14 @@ def solveqn(powers=powers, weights=weights, var=1):
 def value(chromosome, powers, weights):
     return np.dot(weights, chromosome ** powers)
 
-def eqnfit(chromosome, powers, weights):
+def eqnfit(chromosome, powers, weights, val):
     output = np.dot(weights, chromosome ** powers)
-    error = max(1e-300, math.fabs(output))
+    error = max(1e-300, math.fabs(output - val))
     return 1/error
 
 # list(solveqn())
+solver = solveqn()
+for k in solver.solve():
+    print(k, value(k['best_ind'], powers, weights))
 
 # 2x^5 + 3x^3 + 10x

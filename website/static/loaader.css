@@ -1,8 +1,11 @@
-#content {
-    width: 75%;
-    margin-left: auto;
-    margin-right: auto;
+main {
+    max-width: 60vw !important;
+
+    padding: 2% !important;
+
     font-family: 'Montserrat', sans-serif;
+    font-style: normal;
+    color: white;
 }
 
 body .gist {
@@ -285,4 +288,7 @@ body .gist .pl-ii {
         -webkit-transform: scale(1);
         opacity: 0
     }
+}
+.boxed {
+    border: 1px solid black ;
 }

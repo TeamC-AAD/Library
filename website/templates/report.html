@@ -1,64 +1,61 @@
 {% extends "base.html" %}
 
 {% block head %}
-    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='report.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='report.css') }}">
+    <!--suppress JSUnresolvedLibraryURL -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
 {% endblock %}
 
 {% block content %}
-<div class="loader-container">
-    <div class="spring">
-        <span class="bubble bubble1"></span>
-        <span class="bubble bubble2"></span>
-        <span class="bubble bubble3"></span>
-        <span class="bubble bubble4"></span>
-        <span class="bubble bubble5"></span>
+    <div class="loader-container">
+        <div class="spring">
+            <span class="bubble bubble1"></span>
+            <span class="bubble bubble2"></span>
+            <span class="bubble bubble3"></span>
+            <span class="bubble bubble4"></span>
+            <span class="bubble bubble5"></span>
+        </div>
     </div>
-</div>
-<textarea>
-
-# Euler's Identity
-
-In mathematics, **Euler's identity** is the equality
-$$ e^{i \pi} + 1 = 0. $$
-
-<script src="https://gist.github.com/ArenaGrenade/2561d15331920e0836b2d6cef29921af.js?helloworld.js"></script>
-
-## Explanation
-
-Euler's identity is a special case of Euler's formula from complex
-analysis, which states that for any real number $ x $,
-$$ e^{ix} = \cos x + i \sin x. $$
-
-</textarea>
-{% endblock %}
+    <div id="content"></div>
+{% endblock %}    
 
 {% block scripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.2/markdown-it.min.js" integrity="sha512-7VN0JcGJWL+i8LXzTvbROqUSPzZIu8Fp6GWpkVwtHwrgWwY8CrbZgyHA2YpNhAASQNrYqGYoI2HusCqV+S2xnQ==" crossorigin="anonymous"></script>
     <script>
-        window.texme = {
-            style: "plain",
-            onRenderPage: () => {
-                document.getElementsByClassName("loader-container")[0].style.display = 'none';
-            },
-        }
+        setTimeout(() => {
+            document.getElementsByClassName("loader-container")[0].style.display = "none";
+            var md = window.markdownit({html: true});
+
+            $.ajax({
+                url: "https://raw.githubusercontent.com/nickinack/Library/readmetest/README.md",
+                success: function(markdown){
+                    // Convert the Markdown to HTML.
+                    let html;
+                    html = md.render(markdown);
+                    // Print the HTML to #content using jQuery.
+                    $("#content").html(html);
+                }
+            });
+        }, 0);
     </script>
-    <script src="https://unpkg.com/texme"></script>
     <script>
-        window.onscroll = function() {scrollHandler()};
-
-        function scrollHandler() {
-            let scroll = document.documentElement.scrollTop;
-            let base_func = 1 - (1 / (1 + Math.exp(scroll / 1000)) * 2); /* Range would be from 0 to 1 */
-
-            let startA = 252.44;
-            let startB = 20;
-
-            let rangeA = 240;
-            let rangeB = 220;
-
-            let valueA = (base_func * rangeA + startA) % 360;
-            let valueB = (base_func * rangeB + startB) % 360;
-
+        window.onscroll = () => {
+            letscroll = document.documentElement.scrollTop;
+            letbase_func = 1 - (1 / (1 + Math.exp(scroll / 1000)) * 2); /* Range would be from 0 to 1 */
+            
+            letstartA = 252.44;
+            letstartB = 20;
+            
+            letrangeA = 240;
+            letrangeB = 220;
+            
+            letvalueA = (base_func * rangeA + startA) % 360;
+            letvalueB = (base_func * rangeB + startB) % 360;
+            
             document.body.style.backgroundImage = "linear-gradient(" + valueA + "deg, rgba(86, 128, 233, 0.75) 50.52%, rgba(136, 96, 208, 0.75) 100%), " + "linear-gradient(" + valueB + "deg, rgba(132, 206, 235, 0.8) 0%, rgba(90, 137, 234, 0.8) 100%)";
-        }
+        };
     </script>
+    <script src="https://gist.github.com/nickinack/0c971fa5c2099867b7c4d45c5d34b0b3.js"></script>
+    <!--<script src="https://gist.github.com/ArenaGrenade/1120578445cb0102456b7e71c27373c8.js"></script>
+    <script src="https://gist.github.com/ArenaGrenade/fe44a0face11f042f3c78bca7386c165.js"></script>-->
 {% endblock %}

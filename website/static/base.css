@@ -24,3 +24,7 @@ body {
 body::-webkit-scrollbar {
     display: none; /* Do not display the scrollbar */
 }
+
+.boxed {
+    border: 1px solid black ;
+}

@@ -1,4 +1,4 @@
-from flask import Flask, Response, render_template, request, session
+from flask import Flask, Response, render_template, request, session, redirect, url_for
 # from TSP import TSPSolver, tsp_fitness
 import json
 import random
@@ -18,6 +18,7 @@ map_str = "map1.txt"
 
 powers = np.array([5, 3, 1])
 weights = np.array([2, 3, 10])
+val = 14
 
 @app.route('/')
 def mainpage():
@@ -30,7 +31,8 @@ def reportpage():
 @app.route('/eqnsolve', methods=['GET', 'POST'])
 def eqnsolve():
     global powers
-    global weights 
+    global weights
+    global val
 
     # Number of non-zero coefficients
     n_powers = random.randint(20, 30)
@@ -38,15 +40,23 @@ def eqnsolve():
     powers = np.random.choice(np.arange(-50, 50), replace=False, size=n_powers)
     # coefficients for each term
     weights = np.random.uniform(-100, 100, n_powers)
+    # value
+    val = np.random.uniform(-100, 100)
 
+
+    weights = np.around(weights, 2)
+    
     session['powers'] = powers.tolist()
     session['weights'] = weights.tolist()
-    
-    
+    session['val'] = val
+
+
+
     print("powers: ")
     print(powers)
     print("weights: ")
     print(weights)
+    print("val : " + str(val))
 
     # return render_template('eqnsolve.html')
     # list(solveqn(powers, weights))
@@ -56,8 +66,9 @@ def eqnsolve():
 def eqn_chart_data():
     global powers
     global weights
+    global val
     print("Called")
-    solver = solveqn(powers, weights)
+    solver = solveqn(powers, weights, val)
     def generate_data(solver):
         best_ind = []
         for curr_data in solver.solve():
@@ -93,9 +104,11 @@ def eqn_chart_data():
 @app.route('/tsp', methods=['GET', 'POST'])
 def tsp():
     mp = request.args.get("map")
-    if mp is None:
-        return "Map file required"
 
+    if mp is None:
+        mp = np.random.randint(low=1, high=9)
+        mp = "map" + str(mp) + ".txt"
+        return redirect(url_for('tsp', map=mp))
     global map_str
     map_str = mp
     return render_template('tsp.html')
@@ -149,6 +162,7 @@ def test_tsp(map):
     scores = pd.DataFrame(info)
     scores = scores.to_numpy()
     scores = scores.astype(np.float)
+    session["n_nodes"] = len(scores)
     solver = TSPSolver(
         gene_size=len(scores),
         fitness_func=lambda a : tsp_fitness(a , scores),
