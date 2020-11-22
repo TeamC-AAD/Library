@@ -172,7 +172,7 @@ def test_tsp(map):
         selection_ratio=0.6, # percentage of the population to select for mating
         selection_type="linear_rank",
         crossover_type="one_point",
-        mutation_type="insert",
+        mutation_type="interchanging",
         verbose=True,
         cv=0
     )
