@@ -37,6 +37,7 @@ We pass each set of chromosome's indices corresponding to the appropriate header
 \
 ![alt text](fitness.png "fitness")
 
+
 The code snippet for the fitness function has been provided here:
 
 ```python
