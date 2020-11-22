@@ -31,9 +31,12 @@ is done, we removed cells and headers which have empty cells. We now move forwar
 
 <b>Step 3</b>: Define fitnesss function. The fitness function for a given set of chromosomes is defined as follows:
 
-<img src="http://www.sciweavers.org/upload/Tex2Img_1605900223/render.png">
+![alt text](mse.png "Mean Squared Error")
+\
 We pass each set of chromosome's indices corresponding to the appropriate headers into a Logistic Regressor. We then report the fitness as follows:
-<img src="http://www.sciweavers.org/upload/Tex2Img_1605900540/render.png">
+\
+![alt text](fitness.png "fitness")
+
 
 The code snippet for the fitness function has been provided here:
 
