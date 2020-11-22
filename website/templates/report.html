@@ -27,37 +27,50 @@
             var md = window.markdownit({html: true});
 
             $.ajax({
-                url: "https://raw.githubusercontent.com/nickinack/Library/readmetest/README.md",
+                url: "https://raw.githubusercontent.com/TeamC-AAD/Gists/main/README.md",
                 success: function(markdown){
                     // Convert the Markdown to HTML.
                     let html;
                     html = md.render(markdown);
                     // Print the HTML to #content using jQuery.
                     $("#content").html(html);
-                }
-            });
 
-            document.getElementById("f6").appendChild(document.getElementById("gist106558881"));
+                    var append_db = {
+                        "f2": "gist106558881",
+                        "f3": "gist106558881",
+                        "f4": "gist106558914",
+                        "f5": "gist106558881",
+                        "f6": "gist106558881",
+                    }
+
+                    for (let pair in append_db) {
+                        document.getElementById(pair).appendChild(document.getElementById(append_db[pair]));
+                    }
+
+                    document.getElementById("f6").appendChild(document.getElementById("gist106558881"));
+                }
+            });            
         }, 0);
     </script>
     <script>
         window.onscroll = () => {
-            letscroll = document.documentElement.scrollTop;
-            letbase_func = 1 - (1 / (1 + Math.exp(scroll / 1000)) * 2); /* Range would be from 0 to 1 */
+            let scroll = document.documentElement.scrollTop;
+            let base_func = 1 - (1 / (1 + Math.exp(scroll / 1000)) * 2); /* Range would be from 0 to 1 */
             
-            letstartA = 252.44;
-            letstartB = 20;
+            let startA = 252.44;
+            let startB = 20;
             
-            letrangeA = 240;
-            letrangeB = 220;
+            let rangeA = 240;
+            let rangeB = 220;
             
-            letvalueA = (base_func * rangeA + startA) % 360;
-            letvalueB = (base_func * rangeB + startB) % 360;
+            let valueA = (base_func * rangeA + startA) % 360;
+            let valueB = (base_func * rangeB + startB) % 360;
             
             document.body.style.backgroundImage = "linear-gradient(" + valueA + "deg, rgba(86, 128, 233, 0.75) 50.52%, rgba(136, 96, 208, 0.75) 100%), " + "linear-gradient(" + valueB + "deg, rgba(132, 206, 235, 0.8) 0%, rgba(90, 137, 234, 0.8) 100%)";
         };
     </script>
+    <!--f4.js-->
+    <script src="https://gist.github.com/nickinack/023b98360b89ec8dc416bcff9de9cda4.js"></script>
+    <!--f6.js-->
     <script src="https://gist.github.com/nickinack/0c971fa5c2099867b7c4d45c5d34b0b3.js"></script>
-    <!--<script src="https://gist.github.com/ArenaGrenade/1120578445cb0102456b7e71c27373c8.js"></script>
-    <script src="https://gist.github.com/ArenaGrenade/fe44a0face11f042f3c78bca7386c165.js"></script>-->
 {% endblock %}
