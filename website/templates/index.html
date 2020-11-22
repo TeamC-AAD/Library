@@ -6,7 +6,7 @@
 
 {% block content %}
     <div class="landing-container">
-        <div class="main-title">GeneAl : The Genetic Algorithm Library</div>
+        <div class="main-title">Genesis : The Genetic Algorithm Library</div>
         <div class="button-container">
             <button id="explore-button" class="btn btn-landing" onclick="document.getElementById('explore-section').scrollIntoView(true);">
                 <i class="fas fa-compass"></i><span>Explore</span>
@@ -39,7 +39,7 @@
 
             </div>
             <div class="explore-card" id="ml-report">
-                <div class="explore-card-title title-card-left">Feature Selection using GA in Machine Learning</div>
+                <div class="explore-card-title title-card-left">Feature Selection using GA in ML</div>
                 <div class="explore-card-text text-card-left">
                    Given a set of n features, our goal is to select m optimal features
                    from these n features, such that the mean squared error is as low
@@ -49,7 +49,47 @@
             </div>
         </div>
     </div>
-    <div id="footer"></div>
+    
+    
+      <!-- Site footer -->
+      <footer class="site-footer">
+        <div class="container">
+          <div class="row">
+            <div class="col-sm-12 col-md-6">
+              <h6>About</h6>
+              <p class="text-justify">
+                Genesis is a library created using Python in order to
+                implement Genetic Algorithms. We have added functionalities for a continuous 
+                GA solver and used it to optimize the travelling salesman
+                problem (TSP), approximate the minimal roots of a non-linear
+                 equation and feature selection in the field of Machine 
+                 Learning.
+              </p>
+            </div>
+  
+            <div class="col-xs-6 col-md-3">
+              <h6>Members</h6>
+              <ul class="footer-links">
+                <li><a href="https://github.com/nickinack/">Karthik Viswanathan</a></li>
+                <li><a href="https://github.com/arenagrenade">Rohan Asokan</a></li>
+                <li><a href="https://github.com/abhishekh2001/">Abhishekh Sivakumar</a></li>
+              </ul>
+            </div>
+  
+            <div class="col-xs-6 col-md-3">
+              <h6>Quick Links</h6>
+              <ul class="footer-links">
+                <li><a href="https://github.com/TeamC-AAD/Library">Library</a></li>
+                <li><a href={{ url_for('tsp') }}>TSP</a></li>
+                <li><a href={{ url_for('eqnsolve') }}>Equation Solver</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+  </footer>
+
+
+
     <div class="group-bar">
         <span class="group-bar-text">Created By Team-C</span>
         <div class="group-bar-line"></div>
