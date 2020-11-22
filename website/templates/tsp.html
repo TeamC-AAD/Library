@@ -7,35 +7,33 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css" rel="stylesheet">
     <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='base.css') }}">
-    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='loader.css') }}">
-    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='mainpage.css') }}">
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css">
-
-    <style>
-        .boxed {
-                /* border: 2px solid rgb(218, 148, 43) ; */
-                padding-top: 50px;
-                padding-bottom: 20px;
-            }
-    </style>
-    </head>
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='tsp.css') }}">
+</head>
     
-    <body>
-        <h1 id="main_title"></h1>
-        <div class="container">
-            <div class="row">
-                <div class="col-12 boxed">
-                    <canvas id="canvas"></canvas>
-            </div>
+<body>
+    <div class="tsp-container">
+        <div class="page-title">TSP SOLVER</div>
+        <div class="canvas-container">
+            <canvas id="canvas"></canvas>
+        </div>
+        <div class="svg-graph-container">
+            <svg height="720" width="720"></svg>
         </div>
     </div>
 
-    <div>
+    <!-- <h1 id="main_title">TSP SOLVER</h1>
+    <div class="container">
+        <div class="row">
+            <div class="col-12 boxed">
+                <canvas id="canvas"></canvas>
+            </div>
+        </div>
+    </div> -->
+
+    <!-- <div>
         <h2 id="graph_header"></h2>
         <svg width="1060" height="900"></svg>
-    </div>
+    </div> -->
     <!--suppress JSUnresolvedLibraryURL -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
     <!--suppress JSUnresolvedLibraryURL -->
@@ -136,6 +134,10 @@
                 console.log(data.best_ind);
 
                 if (data.iter == -1) {
+                    document.getElementsByClassName("canvas-container")[0].style.width = "50%";
+                    document.getElementsByClassName("canvas-container")[0].style.left = "28%";
+                    document.getElementsByClassName("svg-graph-container")[0].style.display = "block";
+                    document.getElementsByClassName("page-title")[0].style.marginTop = "6%";
                     generate_graph(data.graph, data.best_ind);
                     source.close();
                 }
@@ -253,7 +255,7 @@
                         .call(d3.drag()
                             .on("start", dragstarted)
                             .on("drag", dragged)
-                            .on("end", dragended));;
+                            .on("end", dragended));
 
                     var label = svg.append("g")
                         .attr("class", "labels")
