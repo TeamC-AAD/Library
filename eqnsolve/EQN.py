@@ -45,8 +45,5 @@ def eqnfit(chromosome, powers, weights, val):
     return 1/error
 
 # list(solveqn())
-solver = solveqn()
-for k in solver.solve():
-    print(k, value(k['best_ind'], powers, weights))
 
 # 2x^5 + 3x^3 + 10x
