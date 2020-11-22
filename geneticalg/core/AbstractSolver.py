@@ -127,7 +127,7 @@ class AbstractSolver:
         while True:
             generation += 1
 
-            if generation % gen_interval == 0 and self.verbose:
+            if generation % 15 == 0 and self.verbose:
                 logging.info(f"#Iter: {generation}")
                 logging.info(f"#Best_fit: 1/{fitness[0]}")
 

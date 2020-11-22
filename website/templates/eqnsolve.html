@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Solving polynomial equation</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css" rel="stylesheet">
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='base.css') }}">
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='loader.css') }}">
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='mainpage.css') }}">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css">
+
+    <style>
+            .boxed {
+                border: 4px solid #84DCCF ;
+                border-radius: 8px;
+                padding: 20px;
+                position: absolute;
+                top: 50%;
+                left: 17%;
+                right: 15%;
+            }
+            
+            #result {
+                padding-top: 5px;
+            }
+    </style>
+</head>
+
+<body>
+    <!--suppress JSUnresolvedLibraryURL -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <!--suppress JSUnresolvedLibraryURL -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <!--suppress JSUnresolvedLibraryURL -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['\\(','\\)']]}});
+      </script>
+    <script type="text/javascript"
+        src="http://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+    <!--D3.js -->
+
+    <div class = "landing-container">
+        <div class="main-title"> Equation Solver </div>
+        <div class = "boxed">
+            {% for i in range(session['powers']|length) %}
+            {% if i != 0 %}
+                {% if  session['weights'][i] > 0 %} 
+                    +
+                {% endif %}
+            {% endif %}
+            ${{ session['weights'][i] }} x^{ {{ session['powers'][i] }} }$ 
+            {% endfor %}
+            
+            ${ = {{ session['val'] }} }$
+
+            <div id="result">
+            <p> $Convergence$(<span id="x_val"></span>) = <span id="y_val"></span> </p>
+            </div>
+        </div>
+    </div>
+
+
+    
+    <script>
+        $(document).ready(function () {
+            const source = new EventSource("/eqn-chart-data");
+
+            source.onmessage = function (event) {
+                const data = JSON.parse(event.data);
+                // Push the data points to the fitness curve
+                console.log("data best individual is ");
+                console.log(data.best_ind);
+                $("#x_val").text(data.best_ind)
+                $("#y_val").text(data.value)
+                // document.getElementById("")
+
+                if (data.iter == -1) {
+                    console.log("closing...");
+                    source.close();
+                }
+                console.log(data.iter, data)
+            }
+        });
+
+    </script>
+</body>
+
+</html>

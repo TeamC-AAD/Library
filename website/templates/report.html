@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='report.css') }}">
+    <!--suppress JSUnresolvedLibraryURL -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="loader-container">
+        <div class="spring">
+            <span class="bubble bubble1"></span>
+            <span class="bubble bubble2"></span>
+            <span class="bubble bubble3"></span>
+            <span class="bubble bubble4"></span>
+            <span class="bubble bubble5"></span>
+        </div>
+    </div>
+    <div class="main-title">Feature Selection using Genetic Algorithms</div>
+    <div id="content"></div>
+{% endblock %}    
+
+{% block scripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.2/markdown-it.min.js" integrity="sha512-7VN0JcGJWL+i8LXzTvbROqUSPzZIu8Fp6GWpkVwtHwrgWwY8CrbZgyHA2YpNhAASQNrYqGYoI2HusCqV+S2xnQ==" crossorigin="anonymous"></script>
+    <script>
+        document.onreadystatechange = () => {
+            if (document.readyState == 'complete') {
+                setTimeout(() => {
+                    document.getElementsByClassName("loader-container")[0].style.display = "none";
+                    var md = window.markdownit({html: true});
+
+                    $.ajax({
+                        url: "https://raw.githubusercontent.com/TeamC-AAD/Gists/main/README.md",
+                        success: function(markdown){
+                            // Convert the Markdown to HTML.
+                            let html;
+                            html = md.render(markdown);
+                            // Print the HTML to #content using jQuery.
+                            $("#content").html(html);
+
+                            var append_db = {
+                                "f1": "gist106561722",  
+                                "f2": "gist106561718",
+                                "f3": "gist106561707",
+                                "f4": "gist106558914",
+                                "f5": "gist106558898",
+                                "f6": "gist106558881",
+                            }
+
+                            for (let pair in append_db) {
+                                document.getElementById(pair).appendChild(document.getElementById(append_db[pair]));
+                            }
+
+                            document.getElementById("f6").appendChild(document.getElementById("gist106558881"));
+                        }
+                    });            
+                }, 1000);
+            }
+        }
+    </script>
+    <script>
+        window.onscroll = () => {
+            let scroll = document.documentElement.scrollTop;
+            let base_func = 1 - (1 / (1 + Math.exp(scroll / 1000)) * 2); /* Range would be from 0 to 1 */
+            
+            let startA = 252.44;
+            let startB = 20;
+            
+            let rangeA = 240;
+            let rangeB = 220;
+            
+            let valueA = (base_func * rangeA + startA) % 360;
+            let valueB = (base_func * rangeB + startB) % 360;
+            
+            document.body.style.backgroundImage = "linear-gradient(" + valueA + "deg, rgba(86, 128, 233, 0.75) 50.52%, rgba(136, 96, 208, 0.75) 100%), " + "linear-gradient(" + valueB + "deg, rgba(132, 206, 235, 0.8) 0%, rgba(90, 137, 234, 0.8) 100%)";
+        };
+    </script>
+    <!--f1.js is f16-->
+    <script src="https://gist.github.com/nickinack/c7d1338946b41121aca9e6db7a626468.js"></script>
+    <!--f2.js is f15-->
+    <script src="https://gist.github.com/nickinack/b060570ed8dcf1bf1f6d57e588ff2d53.js"></script>
+    <!--f3.js is f14-->
+    <script src="https://gist.github.com/nickinack/d4d6bf75ceaf2b12a886567a9351d360.js"></script>
+    <!--f4.js is f13-->
+    <script src="https://gist.github.com/nickinack/023b98360b89ec8dc416bcff9de9cda4.js"></script>
+    <!--f5.js is f12-->
+    <script src="https://gist.github.com/nickinack/08632259c39d6f326ee1353504311e72.js"></script>
+    <!--f6.js is f11-->
+    <script src="https://gist.github.com/nickinack/0c971fa5c2099867b7c4d45c5d34b0b3.js"></script>
+{% endblock %}

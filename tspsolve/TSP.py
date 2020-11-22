@@ -8,6 +8,7 @@ from geneticalg.core.AbstractSolver import AbstractSolver
 import pandas as pd
 
 
+
 class TSPSolver(AbstractSolver):
     def __init__(
         self,
@@ -75,7 +76,7 @@ class TSPSolver(AbstractSolver):
         for i in range(0,self.pop_cnt):
             a = []
             for j in range(0,self.gene_size):
-                a.append((np.random.random(1)[0],j+2))
+                a.append((np.random.random(1)[0],j+1))
             a = np.array(a)
             dt = [('col1' , a.dtype) , ('col2' , a.dtype)]
             assert a.flags['C_CONTIGUOUS']
@@ -112,7 +113,7 @@ def test_tsp(map):
         max_gen=500, # maximum number of generations
         mutation_ratio=0.4, # mutation rate to apply to the population
         selection_ratio=0.6, # percentage of the population to select for mating
-        selection_type="roulette_wheel",
+        selection_type="stochastic",
         crossover_type="one_point",
         mutation_type="insert",
         verbose=True,
@@ -123,7 +124,7 @@ def test_tsp(map):
         print(curr_data)
 
 ## Test maps
-test_tsp("map7.txt")
+# test_tsp("map7.txt")
 
 
 

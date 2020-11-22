@@ -1,0 +1,51 @@
+.tsp-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.page-title {
+    width: 100%;
+    font-family: 'Montserrat', sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 5vw;
+    display: inline-block;
+    text-align: left;
+
+    padding-left: 5%;
+    margin-top: 2%;
+
+    transition: margin-top 2s;
+}
+
+.canvas-container {
+    position: absolute;
+    width: 85%;
+    height: auto !important;
+
+    top: 52%;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+    display: block;
+
+    transition: width 1s;
+    transition: left 1s;
+}
+
+.svg-graph-container {
+    display: none;
+    position: absolute;
+    height: auto;
+    width: auto;
+
+    top: 50%;
+    left: 95%;
+
+    transform: translate(-100%, -50%);
+
+    border: 1px solid #FFF;
+    border-radius: 50%;
+}
