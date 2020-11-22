@@ -166,9 +166,9 @@ def test_tsp(map):
     solver = TSPSolver(
         gene_size=len(scores),
         fitness_func=lambda a : tsp_fitness(a , scores),
-        pop_cnt=650, # population size (number of individuals)
-        max_gen=290, # maximum number of generations
-        mutation_ratio=0.4, # mutation rate to apply to the population
+        pop_cnt=450, # population size (number of individuals)
+        max_gen=390, # maximum number of generations
+        mutation_ratio=0.5, # mutation rate to apply to the population
         selection_ratio=0.6, # percentage of the population to select for mating
         selection_type="linear_rank",
         crossover_type="one_point",
