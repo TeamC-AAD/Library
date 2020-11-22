@@ -16,41 +16,47 @@
             <span class="bubble bubble5"></span>
         </div>
     </div>
+    <div class="main-title">Feature Selection using Genetic Algorithms</div>
     <div id="content"></div>
 {% endblock %}    
 
 {% block scripts %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/12.0.2/markdown-it.min.js" integrity="sha512-7VN0JcGJWL+i8LXzTvbROqUSPzZIu8Fp6GWpkVwtHwrgWwY8CrbZgyHA2YpNhAASQNrYqGYoI2HusCqV+S2xnQ==" crossorigin="anonymous"></script>
     <script>
-        setTimeout(() => {
-            document.getElementsByClassName("loader-container")[0].style.display = "none";
-            var md = window.markdownit({html: true});
+        document.onreadystatechange = () => {
+            if (document.readyState == 'complete') {
+                setTimeout(() => {
+                    document.getElementsByClassName("loader-container")[0].style.display = "none";
+                    var md = window.markdownit({html: true});
 
-            $.ajax({
-                url: "https://raw.githubusercontent.com/TeamC-AAD/Gists/main/README.md",
-                success: function(markdown){
-                    // Convert the Markdown to HTML.
-                    let html;
-                    html = md.render(markdown);
-                    // Print the HTML to #content using jQuery.
-                    $("#content").html(html);
+                    $.ajax({
+                        url: "https://raw.githubusercontent.com/TeamC-AAD/Gists/main/README.md",
+                        success: function(markdown){
+                            // Convert the Markdown to HTML.
+                            let html;
+                            html = md.render(markdown);
+                            // Print the HTML to #content using jQuery.
+                            $("#content").html(html);
 
-                    var append_db = {
-                        "f2": "gist106561718",
-                        "f3": "gist106561707",
-                        "f4": "gist106558914",
-                        "f5": "gist106558898",
-                        "f6": "gist106558881",
-                    }
+                            var append_db = {
+                                "f1": "gist106561722",  
+                                "f2": "gist106561718",
+                                "f3": "gist106561707",
+                                "f4": "gist106558914",
+                                "f5": "gist106558898",
+                                "f6": "gist106558881",
+                            }
 
-                    for (let pair in append_db) {
-                        document.getElementById(pair).appendChild(document.getElementById(append_db[pair]));
-                    }
+                            for (let pair in append_db) {
+                                document.getElementById(pair).appendChild(document.getElementById(append_db[pair]));
+                            }
 
-                    document.getElementById("f6").appendChild(document.getElementById("gist106558881"));
-                }
-            });            
-        }, 0);
+                            document.getElementById("f6").appendChild(document.getElementById("gist106558881"));
+                        }
+                    });            
+                }, 1000);
+            }
+        }
     </script>
     <script>
         window.onscroll = () => {
@@ -70,6 +76,7 @@
         };
     </script>
     <!--f1.js is f16-->
+    <script src="https://gist.github.com/nickinack/c7d1338946b41121aca9e6db7a626468.js"></script>
     <!--f2.js is f15-->
     <script src="https://gist.github.com/nickinack/b060570ed8dcf1bf1f6d57e588ff2d53.js"></script>
     <!--f3.js is f14-->
