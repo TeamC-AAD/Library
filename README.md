@@ -19,7 +19,7 @@
 
 ## Introduction
 
-Genesis is a library created using Python in order to implement Genetic Algorithms. Genetic Algorithms(GAs) were inspired by the Charles Darwin theory of natural selection and we have added functionalities for a continuous GA solver and used it to optimize the travelling salesman problem (TSP), approximate the minimal roots of a non-linear equation and feature selection in the field of Machine Learning. 
+Genesis is a library created using Python in order to implement Genetic Algorithms. Genetic Algorithms(GAs) were inspired by the Charles Darwin theory of natural selection and we have added functionalities for an abstract GA solver and used it to optimize the travelling salesman problem (TSP), approximate the minimal roots of a non-linear equation and feature selection in the field of Machine Learning. 
 
 ## Installation
 
@@ -45,10 +45,10 @@ After installation, use the following command to download all the packages:
     return 1/np.sum(chromosome)
 ```
 
-Once the fitness function has been created, you must import the library and create an object of the ```ContinuousGenAlgSolver``` in the following way:
+Once the fitness function has been created, you must import the library and create an object of the ```AbstractSolver``` in the following way:
 
 ```python
-solver = ContinuousGenAlgSolver(
+solver = AbstractSolver(
         gene_size=var,
         fitness_func=lambda chromosome: fitness_func(chromosome), #Use your fitness function here
         pop_cnt=4000, # population size (number of individuals)
