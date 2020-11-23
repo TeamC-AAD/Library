@@ -23,7 +23,7 @@ def solveqn(powers=powers, weights=weights, val=val, var=1):
         gene_size=var,
         fitness_func=lambda chromosome: eqnfit(chromosome, powers, weights, val),
         pop_cnt=400, # population size (number of individuals)
-        max_gen=200, # maximum number of generations
+        max_gen=500, # maximum number of generations
         mutation_ratio=0.4, # mutation rate to apply to the population
         selection_ratio=0.6, # percentage of the population to select for mating
         selection_type="linear_rank",

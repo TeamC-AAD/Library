@@ -224,6 +224,6 @@ class AbstractSolver:
         population = np.empty(shape=(self.pop_cnt, self.gene_size))
 
         for i in range(self.gene_size):
-            population[:, i] = np.random.uniform(-10000, 10000 , size=self.pop_cnt)
+            population[:, i] = np.random.uniform(-10, 10, size=self.pop_cnt)
 
         return population
