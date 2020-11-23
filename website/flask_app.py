@@ -12,6 +12,8 @@ sys.path.append("..")
 from tspsolve.TSP import TSPSolver, tsp_fitness
 from eqnsolve.EQN import solveqn, value
 
+from waitress import serve
+
 app = Flask(__name__)
 app.secret_key = "TEST_KEY"
 map_str = "map1.txt"
@@ -180,7 +182,7 @@ def test_tsp(map):
     return solver, scores.tolist()
 
 def main():
-    app.run(debug=True)
+    serve(app, debug=True)
 
 
 if __name__ == "__main__":
