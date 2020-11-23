@@ -86,7 +86,7 @@ def eqn_chart_data():
             print(curr['iter'], curr['best_ind'], value(curr_data['best_ind'], powers, weights))
 
             json_data = json.dumps(curr)
-            yield f"data:{json_data}\n\n"
+            yield f"data:{json_data}\r\n\r\n"
 
         # Done here, generate fake data
         done_signal = {
@@ -95,7 +95,7 @@ def eqn_chart_data():
         }
 
         json_data = json.dumps(done_signal)
-        yield f"data:{json_data}\n\n"
+        yield f"data:{json_data}\r\n\r\n"
 
         return None
     
@@ -137,7 +137,7 @@ def chart_data():
             print({curr['iter'], curr['fitness']})
 
             json_data = json.dumps(curr)
-            yield f"data:{json_data}\n\n"
+            yield f"data:{json_data}\r\n\r\n"
         
 
         # Done here, generate fake data
@@ -148,7 +148,7 @@ def chart_data():
         }
 
         json_data = json.dumps(done_signal)
-        yield f"data:{json_data}\n\n"
+        yield f"data:{json_data}\r\n\r\n"
 
 
         return None
