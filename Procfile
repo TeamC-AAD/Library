@@ -1,0 +1,1 @@
+worker: bash website/app_reunner.sh
