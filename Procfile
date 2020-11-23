@@ -1,1 +1,0 @@
-web: bash website/app_runner.sh

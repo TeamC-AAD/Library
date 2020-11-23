@@ -180,4 +180,4 @@ def test_tsp(map):
     return solver, scores.tolist()
 
 def main():
-    app.run()
+    app.run(debug=True)
