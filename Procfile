@@ -1,1 +1,1 @@
-web: bash website/app_reunner.sh
+web: bash website/app_runner.sh
