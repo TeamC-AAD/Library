@@ -1,1 +1,1 @@
-web: cd website && gunicorn --bind 0.0.0.0:$PORT flask_app:app
+web: cd website && gunicorn --worker-class socketio.sgunicorn.GeventSocketIOWorker --bind 0.0.0.0:$PORT flask_app:app
