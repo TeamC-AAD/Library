@@ -179,5 +179,5 @@ def test_tsp(map):
 
     return solver, scores.tolist()
 
-if __name__ == '__main__':
+def main():
     app.run()

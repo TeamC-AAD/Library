@@ -1,2 +1,2 @@
 cd website
-python3 flask_app.py
+gunicorn -b 0.0.0.0:$PORT flask_app:app
