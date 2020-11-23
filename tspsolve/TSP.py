@@ -12,7 +12,6 @@ import pandas as pd
 class TSPSolver(AbstractSolver):
     def __init__(
         self,
-        problem_type=float,
         fitness_func=None,
         pop_cnt: int = 100,
         gene_size: int = 100,
@@ -22,7 +21,6 @@ class TSPSolver(AbstractSolver):
         selection_type: str = "",
         mutation_type: str = "interchanging",
         crossover_type: str = "",
-        excluded_genes: Sequence = None,
         variables_limits=(-10, 10),
         verbose: bool = False,
         cv=0,
@@ -43,12 +41,10 @@ class TSPSolver(AbstractSolver):
         :param plot_results: whether to plot results of the run at the end
         :param variables_limits: limits for each variable [(x1_min, x1_max), (x2_min, x2_max), ...].
         If only one tuple is provided, then it is assumed the same for every variable
-        :param problem_type: whether problem is of float or integer type
         """
 
         AbstractSolver.__init__(
             self,
-            problem_type=problem_type,
             gene_size=gene_size,
             fitness_func=fitness_func,
             pop_cnt=pop_cnt,
@@ -58,7 +54,6 @@ class TSPSolver(AbstractSolver):
             selection_type=selection_type,
             mutation_type=mutation_type,
             crossover_type=crossover_type,
-            excluded_genes=excluded_genes,
             verbose=verbose,
             cv=cv,
             **kwargs

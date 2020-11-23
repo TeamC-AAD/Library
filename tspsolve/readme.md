@@ -57,3 +57,7 @@ solver = gen_tsp("map.txt")
 for curr_data in solver.solve():
     # Process curr_data
 ```
+
+The comparitive analysis between different selection and mutation combinations have been given below:
+
+![alt text](comparison.png "Analysis")

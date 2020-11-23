@@ -9,7 +9,7 @@ from abc import ABCMeta, abstractmethod
 import sys
 import math
 sys.path.append("..")
-from geneticalg.core.ContinuousSolver import ContinuousGenAlgSolver
+from geneticalg.core.AbstractSolver import AbstractSolver
 
 # 2*x^5 + 3*x^3 + 10x = 0
 
@@ -19,7 +19,7 @@ val = 14
 
 def solveqn(powers=powers, weights=weights, val=val, var=1):
 
-    solver = ContinuousGenAlgSolver(
+    solver = AbstractSolver(
         gene_size=var,
         fitness_func=lambda chromosome: eqnfit(chromosome, powers, weights, val),
         pop_cnt=400, # population size (number of individuals)
