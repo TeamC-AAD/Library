@@ -55,6 +55,10 @@ class AbstractSolver:
 
 
         self.kwargs = kwargs
+        
+        if self.cv == 0:
+            self.crossover_type = "one_point"
+            self.mutation_type = "insert"
 
     def calculate_fitness(self, population):
         '''Calculates fitness of the population
